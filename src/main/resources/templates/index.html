@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avalia - Início</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+
+    <!-- Navbar | Por ora: Gerenciar questões, provas e usuários. -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">
+            <i class="bi bi-book-half"></i>
+            Avalia
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+            <li class="nav-item">
+              <a class="nav-link active" href="#"><i class="bi bi-patch-question-fill me-1"></i> Gerenciar Questões</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><i class="bi bi-file-earmark-text-fill me-1"></i> Gerar Provas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><i class="bi bi-people-fill me-1"></i> Gerenciar Usuários</a>
+            </li>
+            <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                <a href="login.html" class="btn btn-outline-primary-custom">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container py-5">
+
+        <!-- Portal do educador, banner para gerar provas -->
+        <div class="p-5 mb-4 hero-section text-center">
+            <div class="container-fluid py-3">
+                <h1 class="display-5 fw-bold">Portal do Educador</h1>
+                <p class="fs-4">Transforme seu planejamento em avaliações prontas em questão de minutos.</p>
+                <a href="#" class="btn btn-primary-custom btn-lg mt-3">
+                    <i class="bi bi-plus-circle"></i> Criar Nova Prova
+                </a>
+            </div>
+        </div>     
+
+        <!-- Cards de acesso rápido com algumas funcionalidades -->
+        <div class="row text-center g-4">
+             <div class="col-lg-4 d-flex align-items-stretch">
+                <div class="card h-100 w-100">
+                    <div class="card-body d-flex flex-column">
+                        <div class="card-icon mb-3"><i class="bi bi-list-check"></i></div>
+                        <h5 class="card-title">Banco de Questões</h5>
+                        <p class="card-text">Adicione, edite, organize e categorize todas as suas questões em um único lugar.</p>
+                        <a href="#" class="btn btn-outline-primary-custom mt-auto">Acessar Questões</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-flex align-items-stretch">
+                <div class="card h-100 w-100">
+                    <div class="card-body d-flex flex-column">
+                        <div class="card-icon mb-3"><i class="bi bi-clipboard2-check"></i></div>
+                        <h5 class="card-title">Gerador de Provas</h5>
+                        <p class="card-text">Monte avaliações personalizadas selecionando questões do seu banco ou criando novas.</p>
+                        <a href="#" class="btn btn-outline-primary-custom mt-auto">Gerar uma Prova</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-flex align-items-stretch">
+                <div class="card h-100 w-100">
+                    <div class="card-body d-flex flex-column">
+                        <div class="card-icon mb-3"><i class="bi bi-person-gear"></i></div>
+                        <h5 class="card-title">Gestão de Usuários</h5>
+                        <p class="card-text">Controle os níveis de acesso de professores, administradores e outros colaboradores.</p>
+                        <a href="#" class="btn btn-outline-primary-custom mt-auto">Ver Usuários</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portal do aluno, banner para acessar questões de teste | Não sei se manteremos isso -->
+        <div class="p-5 mb-4 student-section text-center">
+            <div class="container-fluid py-3">
+                <h1 class="display-5 fw-bold ">Portal do Aluno</h1>
+                <p class="fs-4 ">Prepare-se para suas provas praticando com nosso banco de questões interativas.</p>
+                <a href="#" class="btn btn-secondary-custom btn-lg mt-3">
+                    <i class="bi bi-lightbulb"></i> Estude com questões de teste
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
