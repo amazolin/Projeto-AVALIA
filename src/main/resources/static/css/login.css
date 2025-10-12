@@ -1,0 +1,100 @@
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #f8f6ff;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.topo {
+  background-color: #ffffff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px 40px;
+}
+
+.logo .nome-sistema {
+  color: #7b3df0;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+.card-login {
+  background: white;
+  padding: 40px 50px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  max-width: 400px;
+  text-align: center;
+}
+
+.card-login h1 {
+  color: #2f2f2f;
+  margin-bottom: 10px;
+}
+
+.card-login p {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+label {
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: 500;
+}
+
+input {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #7b3df0;
+}
+
+button {
+  background-color: #7b3df0;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #682bd3;
+}
+
+.link-cadastro {
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.link-cadastro a {
+  color: #7b3df0;
+  text-decoration: none;
+}
+
+.link-cadastro a:hover {
+  text-decoration: underline;
+}
