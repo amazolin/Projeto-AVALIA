@@ -1,3 +1,8 @@
+:root {
+  --cor-degrade-inicio: #6a11cb;
+  --cor-degrade-fim: #2575fc;
+}
+
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background-color: #f8f6ff;
@@ -71,18 +76,20 @@ input:focus {
 }
 
 button {
-  background-color: #7b3df0;
+  background-image: linear-gradient(to right, var(--cor-degrade-inicio), var(--cor-degrade-fim));
   color: white;
   padding: 12px;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 button:hover {
-  background-color: #682bd3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
 .link-cadastro {
@@ -98,3 +105,21 @@ button:hover {
 .link-cadastro a:hover {
   text-decoration: underline;
 }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo i {
+  color: #6a11cb; /* mesmo roxo da página principal */
+  font-size: 1.4rem;
+}
+
+.logo .nome-sistema {
+  color: #6a11cb;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
