@@ -1,8 +1,8 @@
 -- Cria o banco de dados
-CREATE DATABASE IF NOT EXISTS sistema_ensino;
+CREATE DATABASE IF NOT EXISTS Avalia;
 
 -- Seleciona o banco de dados para uso
-USE sistema_ensino;
+USE Avalia;
 
 -- -----------------------------------------------------
 -- Tabela de Tipos de Usuário (para Coordenador e Professor)
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS simulados_questoes (
 );
 
 -- -----------------------------------------------------
--- Tabela de Ranking (Desejável)
+-- Tabela de Ranking 
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS ranking (
     id_ranking INT AUTO_INCREMENT PRIMARY KEY,
@@ -134,9 +134,10 @@ CREATE TABLE IF NOT EXISTS ranking (
 -- Inserção de dados iniciais
 -- -----------------------------------------------------
 
--- Usuário  (Coordenador) para popular as tabelas
+-- Usuário (Coordenador) para popular as tabelas
+
 INSERT INTO usuarios (id_usuario, nome, email, senha, id_tipo) VALUES
-(40, 'Alécio Aparecido Preto de Godoi ', ' f167coord.ads@cps.sp.gov.br.', 'senha_hashed_123', 1);
+(1, 'Alécio Aparecido Preto de Godoi ', ' f167coord.ads@cps.sp.gov.br.', 'senha_hashed_123', 1);
 
 -- Inserir Disciplinas 
 INSERT INTO disciplinas (nome_disciplina, id_criador) VALUES
@@ -150,7 +151,7 @@ INSERT INTO disciplinas (nome_disciplina, id_criador) VALUES
 ('Redes', 1);
 
 
--- Banco de Dados em MySQL (Disciplina ID 1)
+-- Banco de Dados em MySQL 
 INSERT INTO questoes (texto_questao, id_disciplina, id_criador, alternativa_correta) VALUES
 ('Qual comando é usado para selecionar dados em MySQL?', 1, 1, 'a'),
 ('Qual comando cria um novo banco de dados?', 1, 1, 'b'),
@@ -175,7 +176,7 @@ INSERT INTO opcoes_questao (id_questao, letra, texto_opcao) VALUES
 (9, 'a', 'ALTER TABLE'), (9, 'b', 'CREATE COLUMN'), (9, 'c', 'ADD COLUMN'), (9, 'd', 'MODIFY'), (9, 'e', 'APPEND'),
 (10, 'a', 'WHERE'), (10, 'b', 'GROUP BY'), (10, 'c', 'HAVING'), (10, 'd', 'ORDER BY'), (10, 'e', 'JOIN');
 
--- Linguagem de Programação C (Disciplina ID 2)
+-- Linguagem de Programação C 
 INSERT INTO questoes (texto_questao, id_disciplina, id_criador, alternativa_correta) VALUES
 ('Qual especificador imprime um inteiro?', 2, 1, 'b'),
 ('Qual função lê dados do teclado?', 2, 1, 'b'),
@@ -250,7 +251,7 @@ INSERT INTO opcoes_questao (id_questao, letra, texto_opcao) VALUES
 (39, 'a', 'insert()'), (39, 'b', 'add()'), (39, 'c', 'push()'), (39, 'd', 'append()'), (39, 'e', 'put()'),
 (40, 'a', 'List'), (40, 'b', 'Set'), (40, 'c', 'ArrayList'), (40, 'd', 'LinkedList'), (40, 'e', 'Stack');
 
--- Programação Orientada a Objetos em Java (Disciplina ID 5)
+-- Programação Orientada a Objetos em Java
 INSERT INTO questoes (texto_questao, id_disciplina, id_criador, alternativa_correta) VALUES
 ('Qual palavra-chave define uma classe?', 5, 1, 'a'),
 ('Qual palavra-chave cria um objeto?', 5, 1, 'b'),
@@ -275,7 +276,7 @@ INSERT INTO opcoes_questao (id_questao, letra, texto_opcao) VALUES
 (49, 'a', 'this'), (49, 'b', 'self'), (49, 'c', 'super'), (49, 'd', 'me'), (49, 'e', 'obj'),
 (50, 'a', 'Polimorfismo'), (50, 'b', 'Encapsulamento'), (50, 'c', 'Herança'), (50, 'd', 'Modularidade'), (50, 'e', 'Sobrecarga');
 
--- Engenharia de Software (Disciplina ID 6)
+-- Engenharia de Software
 INSERT INTO questoes (texto_questao, id_disciplina, id_criador, alternativa_correta) VALUES
 ('Qual modelo é conhecido como cascata?', 6, 1, 'c'),
 ('Qual metodologia usa sprints?', 6, 1, 'b'),
@@ -300,7 +301,7 @@ INSERT INTO opcoes_questao (id_questao, letra, texto_opcao) VALUES
 (59, 'a', 'Processos acima de pessoas'), (59, 'b', 'Indivíduos acima de processos'), (59, 'c', 'Documentação acima de software'), (59, 'd', 'Contratos acima de colaboração'), (59, 'e', 'Ferramentas acima de adaptação'),
 (60, 'a', 'Análise'), (60, 'b', 'Projeto'), (60, 'c', 'Implementação'), (60, 'd', 'Validação'), (60, 'e', 'Codificação');
 
--- Arquitetura e Organização de Computadores (Disciplina ID 7)
+-- Arquitetura e Organização de Computadores 
 INSERT INTO questoes (texto_questao, id_disciplina, id_criador, alternativa_correta) VALUES
 ('Qual unidade executa instruções?', 7, 1, 'c'),
 ('Qual é a menor unidade de informação?', 7, 1, 'b'),
@@ -325,7 +326,7 @@ INSERT INTO opcoes_questao (id_questao, letra, texto_opcao) VALUES
 (69, 'a', 'ULA'), (69, 'b', 'UC'), (69, 'c', 'Registrador'), (69, 'd', 'Cache'), (69, 'e', 'BIOS'),
 (70, 'a', 'RAM'), (70, 'b', 'ROM'), (70, 'c', 'Cache'), (70, 'd', 'Flash'), (70, 'e', 'Registrador');
 
--- Redes (Disciplina ID 8)
+-- Redes 
 INSERT INTO questoes (texto_questao, id_disciplina, id_criador, alternativa_correta) VALUES
 ('Qual camada do modelo OSI é responsável pelo roteamento?', 8, 1, 'c'),
 ('Qual protocolo é usado para enviar e-mails?', 8, 1, 'b'),
@@ -349,4 +350,3 @@ INSERT INTO opcoes_questao (id_questao, letra, texto_opcao) VALUES
 (78, 'a', 'Ethernet'), (78, 'b', 'Wi-Fi'), (78, 'c', 'Token Ring'), (78, 'd', 'Bluetooth'), (78, 'e', 'DSL'),
 (79, 'a', 'FTP'), (79, 'b', 'HTTP'), (79, 'c', 'SNMP'), (79, 'd', 'DHCP'), (79, 'e', 'SMTP'),
 (80, 'a', 'HTTPS'), (80, 'b', 'SHTTP'), (80, 'c', 'FTPS'), (80, 'd', 'SMTPS'), (80, 'e', 'SSH');
-
