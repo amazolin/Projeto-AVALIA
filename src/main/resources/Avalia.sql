@@ -1,8 +1,4 @@
--- Cria o banco de dados
-CREATE DATABASE IF NOT EXISTS Avalia;
 
--- Seleciona o banco de dados para uso
-USE Avalia;
 
 -- -----------------------------------------------------
 -- Tabela de Tipos de Usuário (para Coordenador e Professor)
