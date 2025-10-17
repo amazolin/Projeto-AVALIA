@@ -1,27 +1,53 @@
 package com.example.controller;
 
-import org.springframework.stereotype.Controller;
+import com.example.model.Usuario; 
+import com.example.service.UsuarioService; 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity; 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController; 
+import java.util.List; 
 
-
-@Controller
+@RestController 
+@RequestMapping 
 public class ControladorAvalia {
 
-	 @GetMapping("/login")
-	    public String login() {
-	        // Retorna o nome do template sem extensão
-	        return "login";
-	    }
+   
+    private final UsuarioService usuarioService;
 
-		@GetMapping("/coordenador")
-		public String coordenador() {
-			return "coordenador";
-		}
+    
+    public ControladorAvalia(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
-		@GetMapping("/cadastro")
-		public String cadastro() {
-			return "cadastro";
-		}
-		
-	}
+   
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/coordenador")
+    public String coordenador() {
+        return "coordenador";
+    }
+
+    @GetMapping("/cadastro")
+    public String cadastro() {
+        return "cadastro";
+    }
+
+  
+
+   
+    @GetMapping("/api/usuarios") 
+    public ResponseEntity<List<Usuario>> listarTodos() {
+        
+        
+        List<Usuario> usuarios = usuarioService.buscarTodos(); 
+        
+        
+        return ResponseEntity.ok(usuarios);
+    }
+}
