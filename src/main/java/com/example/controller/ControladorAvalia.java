@@ -3,13 +3,15 @@ package com.example.controller;
 import com.example.model.Usuario; 
 import com.example.service.UsuarioService; 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity; 
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController; 
+//import org.springframework.web.bind.annotation.RestController; 
 import java.util.List; 
 
-@RestController 
+//@RestController -- Causa erro ao tentar retornar uma view
+@Controller 
 @RequestMapping 
 public class ControladorAvalia {
 
@@ -20,8 +22,6 @@ public class ControladorAvalia {
     public ControladorAvalia(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
-
-   
 
     @GetMapping("/login")
     public String login() {
@@ -37,9 +37,6 @@ public class ControladorAvalia {
     public String cadastro() {
         return "cadastro";
     }
-
-  
-
    
     @GetMapping("/api/usuarios") 
     public ResponseEntity<List<Usuario>> listarTodos() {
