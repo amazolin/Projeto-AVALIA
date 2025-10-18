@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 -- -----------------------------------------------------
 -- Inserção de ID explícito seguido de reset do AUTO_INCREMENT para evitar problemas futuros
 INSERT INTO usuarios (id_usuario, nome, email, senha, id_tipo) VALUES
-(1, 'Jadir ', ' jadir@fatec.sp.br ', '1234', 1);
+(1, 'Jadir', 'jadir@fatec.sp.br', '1234', 1);
 
 -- Garante que o próximo ID gerado automaticamente será 2
 ALTER TABLE usuarios AUTO_INCREMENT = 2;

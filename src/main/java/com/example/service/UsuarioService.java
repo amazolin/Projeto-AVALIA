@@ -29,4 +29,13 @@ public class UsuarioService {
         
         return usuarioRepository.save(novoUsuario);
     }
+    
+    public Usuario buscarPorEmailSenha(String email, String senha) {
+        System.out.println("🔎 Buscando no banco: " + email + " | " + senha);
+        Usuario u = usuarioRepository.findByEmailAndSenha(email, senha);
+        System.out.println("👉 Resultado: " + (u != null ? u.getNome() : "nenhum usuário encontrado"));
+        return u;
+    }
+
+
 }

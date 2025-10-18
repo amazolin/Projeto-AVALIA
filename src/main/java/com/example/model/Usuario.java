@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-
+import jakarta.persistence.Column;
 
 @Entity 
 @Table(name = "usuarios") 
@@ -15,6 +15,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")  
     private Long id;
 
     private String nome;
@@ -25,8 +26,7 @@ public class Usuario {
     @JoinColumn(name = "id_tipo")
     private TipoUsuario tipoUsuario;
 
-    public Usuario() {
-    }
+    public Usuario() {}
 
     public Usuario(String nome, String email, String senha, TipoUsuario tipoUsuario) {
         this.nome = nome;
@@ -34,6 +34,7 @@ public class Usuario {
         this.senha = senha;
         this.tipoUsuario = tipoUsuario;
     }
+
 
     public Long getId() {
         return id;
