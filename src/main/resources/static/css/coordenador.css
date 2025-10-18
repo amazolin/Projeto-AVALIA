@@ -1,101 +1,112 @@
 :root {
-    --cor-principal-roxa: #6a11cb;
-    --cor-roxa-escura: #5b0fa8;
-    --cor-roxa-clara: #f8f7fc;
-    --cor-degrade-inicio: #6a11cb;
-    --cor-degrade-fim: #2575fc;
-    --cor-cinza-texto: #6c757d;
+	--cor-principal-roxa: #6a11cb;
+	--cor-roxa-escura: #5b0fa8;
+	--cor-roxa-clara: #f8f7fc;
+	--cor-degrade-inicio: #6a11cb;
+	--cor-degrade-fim: #2575fc;
+	--cor-cinza-texto: #6c757d;
 }
 
 body {
-    background-color: var(--cor-roxa-clara);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: var(--cor-roxa-clara);
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* --- navbar | Acho que provavelmente faremos dela um componente reutilizável --- */
 .navbar {
-    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
 }
+
 .navbar-brand {
-    color: var(--cor-principal-roxa) !important;
+	color: var(--cor-principal-roxa) !important;
 }
+
 .navbar .nav-link {
-    color: #555;
-    transition: color .2s;
+	color: #555;
+	transition: color .2s;
 }
-.navbar .nav-link:hover,
-.navbar .nav-link.active {
-    color: var(--cor-principal-roxa);
-    font-weight: 500;
+
+.navbar .nav-link:hover, .navbar .nav-link.active {
+	color: var(--cor-principal-roxa);
+	font-weight: 500;
 }
 
 /* --- Seção do educador | hero por ser a primeira não sei se isso se aplica mesmo. --- */
 .hero-section {
-    background-color: #ffffff;
-    border-radius: 0.5rem;
+	background-color: #ffffff;
+	border-radius: 0.5rem;
 }
-.hero-section .display-5 { color: #333; }
 
-
+.hero-section .display-5 {
+	color: #333;
+}
 
 /* --- Botões dos cards --- */
 .btn-primary-custom {
-    background-image: linear-gradient(to right, var(--cor-degrade-inicio), var(--cor-degrade-fim));
-    border: none;
-    color: white;
-    transition: transform .2s, box-shadow .2s;
-}
-.btn-primary-custom:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,.2);
-    color: white;
-}
-.btn-outline-primary-custom {
-    color: var(--cor-principal-roxa);
-    border-color: var(--cor-principal-roxa);
-}
-.btn-outline-primary-custom:hover {
-    background-color: var(--cor-principal-roxa);
-    color: white;
-    border-color: var(--cor-principal-roxa);
+	background-image: linear-gradient(to right, var(--cor-degrade-inicio),
+		var(--cor-degrade-fim));
+	border: none;
+	color: white;
+	transition: transform .2s, box-shadow .2s;
 }
 
+.btn-primary-custom:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+	color: white;
+}
+
+.btn-outline-primary-custom {
+	color: var(--cor-principal-roxa);
+	border-color: var(--cor-principal-roxa);
+}
+
+.btn-outline-primary-custom:hover {
+	background-color: var(--cor-principal-roxa);
+	color: white;
+	border-color: var(--cor-principal-roxa);
+}
 
 /* --- informações para os cards | mandar para um arquivo cards-style.css --- */
 .card-icon {
-    font-size: 3rem;
-    color: var(--cor-principal-roxa);
+	font-size: 3rem;
+	color: var(--cor-principal-roxa);
 }
+
 .card {
-    transition: transform .2s, box-shadow .2s;
-    border: none;
-    border-radius: 0.5rem;
+	transition: transform .2s, box-shadow .2s;
+	border: none;
+	border-radius: 0.5rem;
 }
+
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0,0,0,.12);
+	transform: translateY(-5px);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, .12);
 }
 
 /* --- Informações para o login | mandar para um arquivo login-style.css --- */
 .body-login {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 2rem 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	padding: 2rem 0;
 }
+
 .form-signin {
-  max-width: 450px;
+	max-width: 450px;
 }
+
 .form-floating:focus-within {
-  z-index: 2;
+	z-index: 2;
 }
+
 .password-toggle-icon {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
-    cursor: pointer;
-    z-index: 5;
-    color: #6c757d;
+	position: absolute;
+	top: 50%;
+	right: 1rem;
+	transform: translateY(-50%);
+	cursor: pointer;
+	z-index: 5;
+	color: #6c757d;
 }
