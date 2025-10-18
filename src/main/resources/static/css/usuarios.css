@@ -22,11 +22,7 @@ body {
     align-items: center;
 }
 
-.topo a {
-    color: var(--cor-principal);
-    text-decoration: none;
-    font-weight: 500;
-}
+
 
 .container-principal {
     max-width: 900px;
@@ -81,3 +77,22 @@ h1 {
     color: green;
     font-weight: 600;
 }
+
+/* --- Topo / Logo --- */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo i {
+  color: var(--cor-principal);
+  font-size: 1.4rem;
+}
+
+.logo .nome-sistema {
+  color: var(--cor-principal);
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
