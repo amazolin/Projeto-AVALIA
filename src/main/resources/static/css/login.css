@@ -1,157 +1,158 @@
 :root {
-  --cor-degrade-inicio: #6a11cb;
-  --cor-degrade-fim: #2575fc;
-  --cor-cinza-texto: #6c757d;
+	--cor-degrade-inicio: #6a11cb;
+	--cor-degrade-fim: #2575fc;
+	--cor-cinza-texto: #6c757d;
 }
 
 /* --- Estrutura geral --- */
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background-color: #f8f6ff;
-  color: #333;
-  margin: 0;
-  padding: 0;
+	font-family: 'Segoe UI', Arial, sans-serif;
+	background-color: #f8f6ff;
+	color: #333;
+	margin: 0;
+	padding: 0;
 }
 
 /* --- Topo / Logo --- */
 .topo {
-  background-color: #ffffff;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-  padding: 15px 40px;
+	background-color: #ffffff;
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+	padding: 15px 40px;
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 }
 
 .logo i {
-  color: #6a11cb;
-  font-size: 1.4rem;
+	color: #6a11cb;
+	font-size: 1.4rem;
 }
 
 .logo .nome-sistema {
-  color: #6a11cb;
-  font-weight: bold;
-  font-size: 1.3rem;
+	color: #6a11cb;
+	font-weight: bold;
+	font-size: 1.3rem;
 }
 
 /* --- Card de Login --- */
 .container {
-  display: flex;
-  flex-direction: column; /* empilha login e portal do aluno */
-  justify-content: center;
-  align-items: center;
-  min-height: 90vh;
-  gap: 2rem; /* espaçamento entre login e portal do aluno */
+	display: flex;
+	flex-direction: column; /* empilha login e portal do aluno */
+	justify-content: center;
+	align-items: center;
+	min-height: 90vh;
+	gap: 2rem; /* espaçamento entre login e portal do aluno */
 }
 
 .card-login {
-  background: white;
-  padding: 40px 50px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
+	background: white;
+	padding: 40px 50px;
+	border-radius: 12px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+	max-width: 400px;
+	width: 100%;
+	text-align: center;
 }
 
 .card-login h1 {
-  color: #2f2f2f;
-  margin-bottom: 10px;
+	color: #2f2f2f;
+	margin-bottom: 10px;
 }
 
 .card-login p {
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 30px;
+	color: #666;
+	font-size: 0.9rem;
+	margin-bottom: 30px;
 }
 
 /* --- Formulário --- */
 form {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
+	display: flex;
+	flex-direction: column;
+	text-align: left;
 }
 
 label {
-  margin-bottom: 5px;
-  color: #333;
-  font-weight: 500;
+	margin-bottom: 5px;
+	color: #333;
+	font-weight: 500;
 }
 
 input {
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s;
+	padding: 10px;
+	margin-bottom: 20px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	outline: none;
+	transition: border-color 0.3s;
 }
 
 input:focus {
-  border-color: #7b3df0;
+	border-color: #7b3df0;
 }
 
 button {
-  background-image: linear-gradient(to right, var(--cor-degrade-inicio), var(--cor-degrade-fim));
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+	background-image: linear-gradient(to right, var(--cor-degrade-inicio),
+		var(--cor-degrade-fim));
+	color: white;
+	padding: 12px;
+	border: none;
+	border-radius: 8px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: transform 0.2s, box-shadow 0.2s;
 }
 
 button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  color: white;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	color: white;
 }
 
 /* --- Link de cadastro --- */
 .link-cadastro {
-  margin-top: 20px;
-  font-size: 0.9rem;
+	margin-top: 20px;
+	font-size: 0.9rem;
 }
 
 .link-cadastro a {
-  color: #7b3df0;
-  text-decoration: none;
+	color: #7b3df0;
+	text-decoration: none;
 }
 
 .link-cadastro a:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 /* --- Portal do Aluno (abaixo do login) --- */
 .student-section {
-  background-color: #f8f9fa;
-  border-radius: 0.6rem;
-  border: 1px solid #dee2e6;
-  text-align: center;
-  padding: 3rem;
-  width: 100%;
-  max-width: 600px;
+	background-color: #f8f9fa;
+	border-radius: 0.6rem;
+	border: 1px solid #dee2e6;
+	text-align: center;
+	padding: 3rem;
+	width: 100%;
+	max-width: 600px;
 }
 
 .btn-secondary-custom {
-  background-color: var(--cor-cinza-texto);
-  border-color: var(--cor-cinza-texto);
-  border-radius: 7px;
-  padding: 12px;
-  color: #fff;
-  font-weight: 500;
-   text-decoration: none;
-  transition: transform .2s, box-shadow .2s, background-color .2s;
+	background-color: var(--cor-cinza-texto);
+	border-color: var(--cor-cinza-texto);
+	border-radius: 7px;
+	padding: 12px;
+	color: #fff;
+	font-weight: 500;
+	text-decoration: none;
+	transition: transform .2s, box-shadow .2s, background-color .2s;
 }
 
 .btn-secondary-custom:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+	background-color: #5a6268;
+	border-color: #545b62;
+	color: #fff;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
 }

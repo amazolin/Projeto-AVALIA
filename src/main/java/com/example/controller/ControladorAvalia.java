@@ -37,6 +37,11 @@ public class ControladorAvalia {
     public String cadastro() {
         return "cadastro";
     }
+    
+    @GetMapping("/usuarios")
+    public String usuarios() {
+        return "usuarios";
+    }
    
     @GetMapping("/api/usuarios") 
     public ResponseEntity<List<Usuario>> listarTodos() {
