@@ -3,6 +3,8 @@
     --cor-secundaria: #2575fc;
     --cor-fundo: #f8f6ff;
     --cor-texto: #333;
+    --cor-verde: #28a745;
+    --cor-vermelho: #dc3545;
 }
 
 body {
@@ -15,14 +17,29 @@ body {
 
 .topo {
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
+.logo i {
+    color: var(--cor-principal);
+    font-size: 1.4rem;
+}
+
+.logo .nome-sistema {
+    color: var(--cor-principal);
+    font-weight: bold;
+    font-size: 1.3rem;
+}
 
 .container-principal {
     max-width: 900px;
@@ -30,7 +47,7 @@ body {
     background-color: #fff;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 h1 {
@@ -59,7 +76,7 @@ h1 {
 }
 
 .usuario-item {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
     border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 0.5rem;
@@ -68,31 +85,41 @@ h1 {
     align-items: center;
 }
 
+.email-usuario {
+    flex: 1;
+    margin-right: 1rem;
+}
+
 .status-pendente {
     color: orange;
     font-weight: 600;
+    margin-right: 1rem;
 }
 
 .status-concluido {
     color: green;
     font-weight: 600;
+    margin-right: 1rem;
 }
 
-/* --- Topo / Logo --- */
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* Botões de ação */
+.botoes-acao button {
+    border: none;
+    color: #fff;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    margin-left: 0.3rem;
+    cursor: pointer;
 }
 
-.logo i {
-  color: var(--cor-principal);
-  font-size: 1.4rem;
+.btn-editar {
+    background: linear-gradient(90deg, #28a745, #71dd8a); /* verde degradê */
 }
 
-.logo .nome-sistema {
-  color: var(--cor-principal);
-  font-weight: bold;
-  font-size: 1.3rem;
+.btn-excluir {
+    background: linear-gradient(90deg, #dc3545, #f86c6b); /* vermelho degradê */
 }
 
+.botoes-acao button i {
+    font-size: 1rem;
+}
