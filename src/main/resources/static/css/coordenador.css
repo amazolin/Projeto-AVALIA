@@ -36,13 +36,6 @@ body {
 }
 .hero-section .display-5 { color: #333; }
 
-/* --- Seção do aluno | design do card --- */
-.student-section {
-    /* Fundo cinza claro, similar ao do educador mas com um tom diferente */
-    background-color: #f8f9fa; 
-    border-radius: 0.5rem;
-    border: 1px solid #dee2e6; /* Borda sutil para dar acabamento */
-}
 
 
 /* --- Botões dos cards --- */
@@ -66,20 +59,7 @@ body {
     color: white;
     border-color: var(--cor-principal-roxa);
 }
-.btn-secondary-custom {
-    background-color: var(--cor-cinza-texto);
-    border-color: var(--cor-cinza-texto);
-    color: #fff;
-    font-weight: 500;
-    transition: transform .2s, box-shadow .2s, background-color .2s;
-}
-.btn-secondary-custom:hover {
-    background-color: #5a6268;
-    border-color: #545b62;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,.15);
-}
+
 
 /* --- informações para os cards | mandar para um arquivo cards-style.css --- */
 .card-icon {
