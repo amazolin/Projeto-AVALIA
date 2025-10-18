@@ -1,8 +1,10 @@
 :root {
   --cor-degrade-inicio: #6a11cb;
   --cor-degrade-fim: #2575fc;
+  --cor-cinza-texto: #6c757d;
 }
 
+/* --- Estrutura geral --- */
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background-color: #f8f6ff;
@@ -11,23 +13,38 @@ body {
   padding: 0;
 }
 
+/* --- Topo / Logo --- */
 .topo {
   background-color: #ffffff;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
   padding: 15px 40px;
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo i {
+  color: #6a11cb;
+  font-size: 1.4rem;
+}
+
 .logo .nome-sistema {
-  color: #7b3df0;
+  color: #6a11cb;
   font-weight: bold;
   font-size: 1.3rem;
 }
 
+/* --- Card de Login --- */
 .container {
   display: flex;
+  flex-direction: column; /* empilha login e portal do aluno */
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  min-height: 90vh;
+  gap: 2rem; /* espaçamento entre login e portal do aluno */
 }
 
 .card-login {
@@ -36,6 +53,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   max-width: 400px;
+  width: 100%;
   text-align: center;
 }
 
@@ -50,6 +68,7 @@ body {
   margin-bottom: 30px;
 }
 
+/* --- Formulário --- */
 form {
   display: flex;
   flex-direction: column;
@@ -92,6 +111,7 @@ button:hover {
   color: white;
 }
 
+/* --- Link de cadastro --- */
 .link-cadastro {
   margin-top: 20px;
   font-size: 0.9rem;
@@ -106,20 +126,32 @@ button:hover {
   text-decoration: underline;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* --- Portal do Aluno (abaixo do login) --- */
+.student-section {
+  background-color: #f8f9fa;
+  border-radius: 0.6rem;
+  border: 1px solid #dee2e6;
+  text-align: center;
+  padding: 3rem;
+  width: 100%;
+  max-width: 600px;
 }
 
-.logo i {
-  color: #6a11cb; /* mesmo roxo da página principal */
-  font-size: 1.4rem;
+.btn-secondary-custom {
+  background-color: var(--cor-cinza-texto);
+  border-color: var(--cor-cinza-texto);
+  border-radius: 7px;
+  padding: 12px;
+  color: #fff;
+  font-weight: 500;
+   text-decoration: none;
+  transition: transform .2s, box-shadow .2s, background-color .2s;
 }
 
-.logo .nome-sistema {
-  color: #6a11cb;
-  font-weight: bold;
-  font-size: 1.3rem;
+.btn-secondary-custom:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
 }
-
