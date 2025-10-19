@@ -1,14 +1,19 @@
 package com.example.controller;
 
-import com.example.model.Usuario;
-import com.example.service.UsuarioService;
-import jakarta.servlet.http.HttpSession;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import com.example.model.Usuario;
+import com.example.service.UsuarioService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping
@@ -39,6 +44,11 @@ public class ControladorAvalia {
     @GetMapping("/usuarios")
     public String usuarios() {
         return "usuarios";
+    }
+
+    @GetMapping("/questoes")
+    public String questoes() {
+        return "questoes";
     }
 
     // --- API: LISTAR USUÁRIOS ---
