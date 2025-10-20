@@ -33,7 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
           <span class="email-usuario">${user.email}</span>
           <span class="${statusClass}">${user.status || "Pendente"}</span>
           <div class="botoes-acao">
-            <button class="btn-editar"><i class="bi bi-pencil-fill"></i></button>
+            <button type="button" class="btn-editar" data-bs-toggle="modal" data-bs-target="#editarUsuario">
+      <i class="bi bi-pencil-fill"></i>
             <button class="btn-excluir" data-email="${user.email}">
               <i class="bi bi-trash-fill"></i>
             </button>

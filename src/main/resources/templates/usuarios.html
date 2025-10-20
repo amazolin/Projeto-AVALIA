@@ -23,10 +23,10 @@
     <h1>Gerenciar Usuários</h1>
 
     <!-- Formulário de adicionar usuário -->
-<form class="form-email" id="formEmail">
-  <input type="email" name="email" id="emailInput" class="form-control" placeholder="Digite o e-mail do usuário" required>
-  <button type="submit" class="btn btn-enviar">Enviar</button>
-</form>
+    <form class="form-email" id="formEmail">
+        <input type="email" name="email" id="emailInput" class="form-control" placeholder="Digite o e-mail do usuário" required>
+        <button type="submit" class="btn btn-enviar">Enviar</button>
+    </form>
 
     <!-- Lista de usuários -->
     <div class="lista-usuarios">
@@ -34,28 +34,83 @@
             <span class="email-usuario">usuario1@exemplo.com</span>
             <span class="status-concluido">Concluído</span>
             <div class="botoes-acao">
-                <button class="btn-editar"><i class="bi bi-pencil-fill"></i></button>
+                <button class="btn-editar" data-bs-toggle="modal" data-bs-target="#editarUsuario"><i class="bi bi-pencil-fill"></i></button>
                 <button class="btn-excluir"><i class="bi bi-trash-fill"></i></button>
             </div>
         </div>
+
         <div class="usuario-item">
             <span class="email-usuario">usuario2@exemplo.com</span>
             <span class="status-pendente">Pendente</span>
             <div class="botoes-acao">
-                <button class="btn-editar"><i class="bi bi-pencil-fill"></i></button>
+                <button class="btn-editar" data-bs-toggle="modal" data-bs-target="#editarUsuario"><i class="bi bi-pencil-fill"></i></button>
                 <button class="btn-excluir"><i class="bi bi-trash-fill"></i></button>
             </div>
         </div>
+
         <div class="usuario-item">
             <span class="email-usuario">usuario3@exemplo.com</span>
             <span class="status-concluido">Concluído</span>
             <div class="botoes-acao">
-                <button class="btn-editar"><i class="bi bi-pencil-fill"></i></button>
+                <button class="btn-editar" data-bs-toggle="modal" data-bs-target="#editarUsuario"><i class="bi bi-pencil-fill"></i></button>
                 <button class="btn-excluir"><i class="bi bi-trash-fill"></i></button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="editarUsuario" tabindex="-1" aria-labelledby="editarUsuarioLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title" id="editarUsuarioLabel">Editar Usuário</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="formEditarUsuario">
+            <div class="mb-3">
+            <label for="nomeEditar" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="nomeEditar" required>
+          </div>
+          <div class="mb-3">
+            <label for="emailEditar" class="form-label">E-mail</label>
+            <input type="email" class="form-control" id="emailEditar" required>
+          </div>
+          <div class="mb-3">
+            <label for="rgmEditar" class="form-label">RGM</label>
+            <input type="number" class="form-control" id="rgmEditar" required>
+          </div>
+          <div class="mb-3">
+            <label for="senhaEditar" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="senhaEditar" required>
+          </div>
+          <div class="mb-3" margin-bottom="10px">
+            <label for="statusAutenticacao" class="form-label">Autenticação</label>
+            <select class="form-select" id="statusAutenticacao" required>
+              <option value="professor">Professor</option>
+              <option value="coordenador">Coordenador</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="statusEditar" class="form-label">Status</label>
+            <select class="form-select" id="statusEditar"required>
+              <option value="concluido">Concluído</option>
+              <option value="pendente">Pendente</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
 <script src="/js/usuarios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
