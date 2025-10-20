@@ -22,7 +22,8 @@ public class TipoUsuarioService {
     }
     
   
-    public TipoUsuario buscarPorId(Integer id) {
+    public TipoUsuario buscarPorId(Long id) {
         return tipoUsuarioRepository.findById(id).orElse(null);
     }
+
 }

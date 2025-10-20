@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.model.Usuario;
+import com.example.model.TipoUsuario;
 import com.example.service.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
@@ -27,29 +28,19 @@ public class ControladorAvalia {
 
     // --- TELAS ---
     @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+    public String login() { return "login"; }
 
     @GetMapping("/coordenador")
-    public String coordenador() {
-        return "coordenador";
-    }
+    public String coordenador() { return "coordenador"; }
 
     @GetMapping("/cadastro")
-    public String cadastro() {
-        return "cadastro";
-    }
+    public String cadastro() { return "cadastro"; }
 
     @GetMapping("/usuarios")
-    public String usuarios() {
-        return "usuarios";
-    }
+    public String usuarios() { return "usuarios"; }
 
     @GetMapping("/questoes")
-    public String questoes() {
-        return "questoes";
-    }
+    public String questoes() { return "questoes"; }
 
     // --- API: LISTAR USUÁRIOS ---
     @GetMapping("/api/usuarios")
@@ -83,5 +74,38 @@ public class ControladorAvalia {
         }
     }
 
+    // --- CADASTRAR USUÁRIO (APENAS E-MAIL) ---
+    @PostMapping("/api/usuarios/cadastrar-email")
+    public ResponseEntity<String> cadastrarEmail(@RequestParam String email) {
+        // Remove espaços extras
+        email = email.trim();
 
+        // Verifica se o e-mail foi informado
+        if (email.isEmpty()) {
+            return ResponseEntity.badRequest().body("E-mail vazio!");
+        }
+
+        // Verifica se o e-mail já existe
+        if (usuarioService.buscarPorEmail(email) != null) {
+            return ResponseEntity.badRequest().body("E-mail já cadastrado!");
+        }
+
+        // Cria novo usuário com valores temporários
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setEmail(email);
+        novoUsuario.setNome("Nome temporário");
+        novoUsuario.setSenha("senha123");      
+
+        // Define TipoUsuario PROFESSOR (id = 2)
+        TipoUsuario tipoProfessor = usuarioService.buscarTipoUsuarioPorId(2L);
+        if (tipoProfessor == null) {
+            return ResponseEntity.badRequest().body("Tipo de usuário PROFESSOR não encontrado!");
+        }
+        novoUsuario.setTipoUsuario(tipoProfessor);
+
+        // Salva no banco
+        usuarioService.salvarUsuario(novoUsuario);
+
+        return ResponseEntity.ok("E-mail cadastrado com sucesso!");
+    }
 }
