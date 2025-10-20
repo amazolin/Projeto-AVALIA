@@ -43,4 +43,9 @@ public class UsuarioService {
     public TipoUsuario buscarTipoUsuarioPorId(Long id) {
         return tipoUsuarioRepository.findById(id).orElse(null);
     }
+    // 🔹 Apagar usuário
+    public void apagarUsuario(Usuario usuario) {
+        usuarioRepository.delete(usuario);
+    }
+
 }
