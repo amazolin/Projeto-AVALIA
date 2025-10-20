@@ -47,10 +47,9 @@ public class ControladorAvalia {
 		return "usuarios";
 	}
 
-	@GetMapping("/questoes")
-	public String questoes() {
-		return "questoes";
-	}
+	// O MÉTODO @GetMapping("/questoes") FOI REMOVIDO DAQUI
+	// para ser colocado no QuestaoController, que lida com a lista.
+
 
 	// --- API: LISTAR USUÁRIOS ---
 	@GetMapping("/api/usuarios")
@@ -139,5 +138,4 @@ public class ControladorAvalia {
 
 		return ResponseEntity.ok("E-mail apagado com sucesso!");
 	}
-
 }
