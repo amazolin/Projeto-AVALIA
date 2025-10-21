@@ -123,3 +123,13 @@ h1 {
 .botoes-acao button i {
     font-size: 1rem;
 }
+
+.choices {
+  width: 100% !important;
+}
+
+/* Garante que o campo interno também se adapte */
+.choices__inner {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}

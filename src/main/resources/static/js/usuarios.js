@@ -4,6 +4,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const inputEmail = document.getElementById("emailInput");
   const lista = document.querySelector(".lista-usuarios");
 
+  const selectDisciplinas = document.querySelector("#disciplinas");
+  if (selectDisciplinas) {
+    new Choices(selectDisciplinas, {
+      removeItemButton: true,
+      searchEnabled: true,
+      placeholderValue: "Selecione as disciplinas",
+      maxItemCount: 8,
+    });
+  }
+
   if (!form || !inputEmail || !lista) {
     console.error("Elemento(s) do DOM não encontrados!");
     return;
