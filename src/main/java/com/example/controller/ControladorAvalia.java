@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +39,8 @@ public class ControladorAvalia {
 	}
 
 	@GetMapping("/cadastro")
-	public String cadastro() {
+	public String cadastro(Model model) {
+		model.addAttribute("usuario", new Usuario());
 		return "cadastro";
 	}
 
@@ -80,6 +82,19 @@ public class ControladorAvalia {
 			return "login";
 		}
 	}
+
+
+
+    // --- CADASTRAR USUÁRIO (COMPLETO) ---
+    @PostMapping("/cadastro-usuario")
+	public String cadastrarUsuario(@ModelAttribute("usuario") Usuario usuario) {
+		usuarioService.salvarUsuario(usuario);
+		return "cadastro"; // redireciona após salvar
+	}
+
+
+
+
 
 	// --- CADASTRAR USUÁRIO (APENAS E-MAIL) ---
 	@PostMapping("/api/usuarios/cadastrar-email")

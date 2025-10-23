@@ -16,7 +16,7 @@
 	<main class="form-signin w-100 m-auto">
 		<div class="card border-0 shadow-lg">
 			<div class="card-body p-4 p-md-5">
-				<form>
+				<form th:action="@{/cadastro-usuario}" th:object="${usuario}" method="post">
 					<div class="text-center mb-4">
 						<a class="navbar-brand fw-bold fs-4" href="index.html"> <i
 							class="bi bi-book-half"></i> Avalia
@@ -25,13 +25,13 @@
 					<h1 class="h3 mb-3 fw-normal text-center">Crie sua conta</h1>
 
 					<div class="form-floating mb-3">
-						<input type="text" class="form-control" id="floatingName"
+						<input type="text" class="form-control" id="nome" th:field="*{nome}"
 							placeholder="Seu nome completo" required> <label
 							for="floatingName">Nome Completo</label>
 					</div>
 
 					<div class="form-floating mb-3">
-						<input type="email" class="form-control" id="floatingInput"
+						<input type="email" class="form-control" id="email" th:field="*{email}"
 							placeholder="nome@exemplo.com" required> <label
 							for="floatingInput">Endereço de e-mail</label>
 					</div>
@@ -42,7 +42,7 @@
 					</div>
 
 					<div class="form-floating mb-3">
-						<input type="password" class="form-control" id="floatingPassword"
+						<input type="password" class="form-control" id="senha" th:field="*{senha}"
 							placeholder="Senha" required> <label
 							for="floatingPassword">Senha</label> <i
 							class="bi bi-eye-slash password-toggle-icon" id="togglePassword"></i>
