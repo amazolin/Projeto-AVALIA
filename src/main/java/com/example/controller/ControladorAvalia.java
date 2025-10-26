@@ -38,6 +38,11 @@ public class ControladorAvalia {
 	public String coordenador() {
 		return "coordenador";
 	}
+	
+	@GetMapping("/professor")
+	public String professor() {
+		return "professor";
+	}
 
 	@GetMapping("/cadastro")
 	public String cadastro(Model model) {
