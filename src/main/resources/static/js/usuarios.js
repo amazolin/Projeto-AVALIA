@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const selectDisciplinas = document.querySelector("#disciplinas");
   if (selectDisciplinas) {
-    new Choices(selectDisciplinas, {
+    window.choicesDisciplinas = new Choices(selectDisciplinas, {
       removeItemButton: true,
       searchEnabled: true,
       placeholderValue: "Selecione as disciplinas",
@@ -43,14 +43,58 @@ document.addEventListener("DOMContentLoaded", function () {
           <span class="email-usuario">${user.email}</span>
           <span class="${statusClass}">${user.status || "Pendente"}</span>
           <div class="botoes-acao">
-            <button type="button" class="btn-editar" data-bs-toggle="modal" data-bs-target="#editarUsuario">
-      <i class="bi bi-pencil-fill"></i>
+            <button type="button" class="btn-editar" data-email="${user.email}" data-bs-toggle="modal" data-bs-target="#editarUsuario">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
             <button class="btn-excluir" data-email="${user.email}">
               <i class="bi bi-trash-fill"></i>
             </button>
           </div>
         `;
         lista.appendChild(item);
+      });
+
+      // === Botões de edição ===
+      document.querySelectorAll(".btn-editar").forEach((btn) => {
+        btn.addEventListener("click", async function () {
+          const emailUsuario = this.getAttribute("data-email");
+          try {
+            // ✅ Novo endpoint corrigido
+            const res = await fetch(
+              `/api/usuarios/buscar?email=${encodeURIComponent(emailUsuario)}`
+            );
+
+            if (!res.ok) throw new Error("Usuário não encontrado.");
+            const usuario = await res.json();
+
+            // Preenche o modal com segurança
+            document.getElementById("nomeEditar").value = usuario.nome || "";
+            document.getElementById("emailEditar").value = usuario.email || "";
+            document.getElementById("rgmEditar").value = usuario.rgm || "";
+            document.getElementById("senhaEditar").value = ""; // não mostramos a senha
+
+            // Tipo de usuário
+            const tipo = usuario.tipoUsuario?.descricao?.toLowerCase() || "";
+            document.getElementById("statusAutenticacao").value =
+              tipo.includes("coordenador") ? "coordenador" : "professor";
+
+            // Status
+            document.getElementById("statusEditar").value = usuario.status || "";
+
+            // Disciplinas (Choices.js)
+            if (window.choicesDisciplinas) {
+              window.choicesDisciplinas.removeActiveItems();
+              if (Array.isArray(usuario.disciplinas)) {
+                usuario.disciplinas.forEach((disc) => {
+                  window.choicesDisciplinas.setChoiceByValue(disc);
+                });
+              }
+            }
+          } catch (error) {
+            console.error("Erro ao buscar usuário:", error);
+            alert("❌ Não foi possível carregar os dados do usuário.");
+          }
+        });
       });
 
       // === Botões de exclusão ===
