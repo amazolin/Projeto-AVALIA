@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -44,13 +45,19 @@ public class ControladorAvalia {
 		return "cadastro";
 	}
 
+	// LISTAR USUÁRIOS (exceto coordenador)
 	@GetMapping("/usuarios")
-	public String usuarios() {
+	public String usuarios(Model model) {
+		List<Usuario> usuarios = usuarioService.buscarTodos();
+
+		// Filtra todos os usuários, exceto o coordenador (id_tipo = 1)
+		List<Usuario> usuariosFiltrados = usuarios.stream()
+		    .filter(u -> u.getTipoUsuario() == null || u.getTipoUsuario().getId() != 1)
+		    .collect(Collectors.toList());
+
+		model.addAttribute("usuarios", usuariosFiltrados);
 		return "usuarios";
 	}
-
-	// O MÉTODO @GetMapping("/questoes") FOI REMOVIDO DAQUI
-	// para ser colocado no QuestaoController, que lida com a lista.
 
 
 	// --- API: LISTAR USUÁRIOS ---
@@ -83,74 +90,77 @@ public class ControladorAvalia {
 		}
 	}
 
-
-
-    // --- CADASTRAR USUÁRIO (COMPLETO) ---
-    @PostMapping("/cadastro-usuario")
+	// --- CADASTRAR USUÁRIO (COMPLETO) ---
+	@PostMapping("/cadastro-usuario")
 	public String cadastrarUsuario(@ModelAttribute("usuario") Usuario usuario) {
 		usuarioService.salvarUsuario(usuario);
 		return "cadastro"; // redireciona após salvar
 	}
 
+	// --- CADASTRAR USUÁRIO (API) ---
+	@PostMapping("/api/usuarios/cadastrar")
+	public ResponseEntity<String> cadastrarUsuario(
+	        @RequestParam String nomeCompleto,
+	        @RequestParam String email,
+	        @RequestParam String rgm,
+	        @RequestParam String senha,
+	        @RequestParam String confirmarSenha) {
 
+	    // Remover espaços extras
+	    nomeCompleto = nomeCompleto.trim();
+	    email = email.trim();
+	    rgm = rgm.trim();
 
+	    // Validações básicas
+	    if (nomeCompleto.isEmpty() || email.isEmpty() || rgm.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
+	        return ResponseEntity.badRequest().body("Todos os campos são obrigatórios!");
+	    }
 
+	    if (!senha.equals(confirmarSenha)) {
+	        return ResponseEntity.badRequest().body("As senhas não coincidem!");
+	    }
 
-	// --- CADASTRAR USUÁRIO (APENAS E-MAIL) ---
-	@PostMapping("/api/usuarios/cadastrar-email")
-	public ResponseEntity<String> cadastrarEmail(@RequestParam String email) {
-		// Remove espaços extras
-		email = email.trim();
+	    // Verifica se o e-mail já existe
+	    if (usuarioService.buscarPorEmail(email) != null) {
+	        return ResponseEntity.badRequest().body("E-mail já cadastrado!");
+	    }
 
-		// Verifica se o e-mail foi informado
-		if (email.isEmpty()) {
-			return ResponseEntity.badRequest().body("E-mail vazio!");
-		}
+	    // Cria novo usuário
+	    Usuario novoUsuario = new Usuario();
+	    novoUsuario.setNome(nomeCompleto);
+	    novoUsuario.setEmail(email);
+	    novoUsuario.setRgm(rgm);
+	    novoUsuario.setSenha(senha);
 
-		// Verifica se o e-mail já existe
-		if (usuarioService.buscarPorEmail(email) != null) {
-			return ResponseEntity.badRequest().body("E-mail já cadastrado!");
-		}
+	    // Força o TipoUsuario com id 2 (Professor)
+	    TipoUsuario tipoPadrao = usuarioService.buscarTipoUsuarioPorId(2L);
+	    if (tipoPadrao == null) {
+	        return ResponseEntity.badRequest().body("Tipo de usuário padrão não encontrado!");
+	    }
+	    novoUsuario.setTipoUsuario(tipoPadrao);
 
-		// Cria novo usuário com valores temporários
-		Usuario novoUsuario = new Usuario();
-		novoUsuario.setEmail(email);
-		novoUsuario.setNome("Nome temporário");
-		novoUsuario.setSenha("senha123");
+	    // Salva no banco
+	    usuarioService.salvarUsuario(novoUsuario);
 
-		// Define TipoUsuario PROFESSOR (id = 2)
-		TipoUsuario tipoProfessor = usuarioService.buscarTipoUsuarioPorId(2L);
-		if (tipoProfessor == null) {
-			return ResponseEntity.badRequest().body("Tipo de usuário PROFESSOR não encontrado!");
-		}
-		novoUsuario.setTipoUsuario(tipoProfessor);
-
-		// Salva no banco
-		usuarioService.salvarUsuario(novoUsuario);
-
-		return ResponseEntity.ok("E-mail cadastrado com sucesso!");
+	    return ResponseEntity.ok("Usuário cadastrado com sucesso!");
 	}
-	
-	// APAGAR E-MAIL
+
+
+	// --- APAGAR E-MAIL ---
 	@PostMapping("/api/usuarios/apagar-email")
 	public ResponseEntity<String> apagarEmail(@RequestParam String email) {
-		// Remove espaços extras
 		email = email.trim();
 
-		// Verifica se o e-mail foi informado
 		if (email.isEmpty()) {
 			return ResponseEntity.badRequest().body("E-mail vazio!");
 		}
 
-		// Busca o usuário pelo e-mail
 		Usuario usuario = usuarioService.buscarPorEmail(email);
 		if (usuario == null) {
 			return ResponseEntity.badRequest().body("E-mail não encontrado!");
 		}
 
-		// Apaga o usuário do banco
 		usuarioService.apagarUsuario(usuario);
-
 		return ResponseEntity.ok("E-mail apagado com sucesso!");
 	}
 }

@@ -21,6 +21,7 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
+    private String rgm;
     
     @ManyToOne
     @JoinColumn(name = "id_tipo")
@@ -28,11 +29,12 @@ public class Usuario {
 
     public Usuario() {}
 
-    public Usuario(String nome, String email, String senha, TipoUsuario tipoUsuario) {
+    public Usuario(String nome, String email, String senha, TipoUsuario tipoUsuario, String rgm) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.tipoUsuario = tipoUsuario;
+        this.rgm = rgm;
     }
 
 
@@ -75,4 +77,14 @@ public class Usuario {
     public void setTipoUsuario(TipoUsuario tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
+
+	public String getRgm() {
+		return rgm;
+	}
+
+	public void setRgm(String rgm) {
+		this.rgm = rgm;
+	}
+    
+    
 }
