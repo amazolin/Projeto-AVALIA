@@ -1,0 +1,196 @@
+:root {
+	--cor-principal-roxa: #6a11cb;
+	--cor-roxa-escura: #5b0fa8;
+	--cor-roxa-clara: #f8f7fc;
+	--cor-degrade-inicio: #6a11cb;
+	--cor-degrade-fim: #2575fc;
+	--cor-cinza-texto: #6c757d;
+}
+
+body {
+	background-color: var(--cor-roxa-clara);
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- navbar --- */
+.navbar {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+}
+
+.navbar-brand {
+	color: var(--cor-principal-roxa) !important;
+}
+
+.navbar .nav-link {
+	color: #555;
+	transition: color .2s;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+	color: var(--cor-principal-roxa);
+	font-weight: 500;
+}
+
+/* --- seção hero --- */
+.hero-section {
+	background-color: #ffffff;
+	border-radius: 0.5rem;
+}
+
+.hero-section .display-5 {
+	color: #333;
+}
+
+/* --- Botões padrão --- */
+.btn-primary-custom {
+	background-image: linear-gradient(to right, var(--cor-degrade-inicio), var(--cor-degrade-fim));
+	border: none;
+	color: white;
+	transition: transform .2s, box-shadow .2s;
+}
+
+.btn-primary-custom:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+	color: white;
+}
+
+.btn-outline-primary-custom {
+	color: var(--cor-principal-roxa);
+	border-color: var(--cor-principal-roxa);
+}
+
+.btn-outline-primary-custom:hover {
+	background-color: var(--cor-principal-roxa);
+	color: white;
+	border-color: var(--cor-principal-roxa);
+}
+
+/* --- Cards --- */
+.card-icon {
+	font-size: 3rem;
+	color: var(--cor-principal-roxa);
+}
+
+.card {
+	transition: transform .2s, box-shadow .2s;
+	border: none;
+	border-radius: 0.5rem;
+}
+
+.card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, .12);
+}
+
+/* --- Login --- */
+.body-login {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	padding: 2rem 0;
+}
+
+.form-signin {
+	max-width: 450px;
+}
+
+.form-floating:focus-within {
+	z-index: 2;
+}
+
+.password-toggle-icon {
+	position: absolute;
+	top: 50%;
+	right: 1rem;
+	transform: translateY(-50%);
+	cursor: pointer;
+	z-index: 5;
+	color: #6c757d;
+}
+
+/* =======================================================
+   FORMULÁRIO: CADASTRO DE NOVA QUESTÃO
+   ======================================================= */
+
+.form-cadastro-questao {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 10px 20px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Título */
+.form-cadastro-questao h2,
+.form-cadastro-questao h3 {
+	font-size: 1.25rem;
+	margin-bottom: 10px;
+	color: var(--cor-principal-roxa);
+	text-align: center;
+}
+
+/* Inputs e labels */
+.form-cadastro-questao label {
+	font-size: 0.9rem;
+	margin-bottom: 3px;
+	color: #333;
+}
+
+.form-cadastro-questao input,
+.form-cadastro-questao select,
+.form-cadastro-questao textarea {
+	font-size: 0.9rem;
+	padding: 6px 8px;
+	margin-bottom: 8px;
+	border-radius: 6px;
+	border: 1px solid #ddd;
+	width: 100%;
+}
+
+/* Área das alternativas */
+.alternativas {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-top: 8px;
+}
+
+.alternativas label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.9rem;
+}
+
+/* Tabs “Múltipla Escolha” / “Verdadeiro ou Falso” */
+.opcoes-tipo-questao {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 10px;
+}
+
+.opcoes-tipo-questao button {
+	padding: 6px 10px;
+	font-size: 0.85rem;
+	border-radius: 6px;
+}
+
+/* Adaptação para telas menores */
+@media (max-height: 800px) {
+	.form-cadastro-questao {
+		padding: 8px;
+	}
+	body {
+		zoom: 0.9; /* opcional */
+	}
+}
+
+@media (max-height: 700px) {
+	body {
+		zoom: 0.85;
+	}
+}
