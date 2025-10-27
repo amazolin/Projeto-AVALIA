@@ -37,8 +37,6 @@ CREATE TABLE IF NOT EXISTS usuarios (
     email VARCHAR(255) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
     frase_seguranca VARCHAR(255),
-    rgm VARCHAR(20),
-    status BOOLEAN DEFAULT TRUE,
     id_tipo BIGINT NOT NULL,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_modificacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -66,6 +64,18 @@ CREATE TABLE IF NOT EXISTS disciplinas (
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_criador) REFERENCES usuarios (id_usuario)
 );
+
+-- -----------------------------------------------------
+-- Tabela de Relacionamento entre Professores e Disciplinas
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS professor_disciplina (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario BIGINT NOT NULL,
+    id_disciplina BIGINT NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
+    FOREIGN KEY (id_disciplina) REFERENCES disciplinas(id_disciplina)
+);
+
 
 -- -----------------------------------------------------
 -- Inserção de dados iniciais - Disciplinas
