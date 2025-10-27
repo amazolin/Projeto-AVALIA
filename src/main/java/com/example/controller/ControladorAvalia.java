@@ -168,6 +168,7 @@ public class ControladorAvalia {
 		usuarioService.apagarUsuario(usuario);
 		return ResponseEntity.ok("E-mail apagado com sucesso!");
 	}
+	
 	// --- BUSCAR USUÁRIO POR EMAIL (API) ---
 	@GetMapping("/api/usuarios/buscar")
 	public ResponseEntity<Usuario> buscarUsuarioPorEmail(@RequestParam String email) {
@@ -185,5 +186,8 @@ public class ControladorAvalia {
 
 	    return ResponseEntity.ok(usuario);
 	}
+	
+
+
 
 }
