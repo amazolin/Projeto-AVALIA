@@ -22,6 +22,7 @@ public class Usuario {
     private String email;
     private String senha;
     private String rgm;
+    private String status;
     
     @ManyToOne
     @JoinColumn(name = "id_tipo")
@@ -29,16 +30,25 @@ public class Usuario {
 
     public Usuario() {}
 
-    public Usuario(String nome, String email, String senha, TipoUsuario tipoUsuario, String rgm) {
+    public Usuario(String nome, String email, String senha, TipoUsuario tipoUsuario, String rgm, String status) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.tipoUsuario = tipoUsuario;
         this.rgm = rgm;
+        this.status = status;
     }
 
 
-    public Long getId() {
+    public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Long getId() {
         return id;
     }
 

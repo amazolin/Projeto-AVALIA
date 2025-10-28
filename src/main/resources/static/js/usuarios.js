@@ -3,7 +3,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("formEmail");
   const inputEmail = document.getElementById("emailInput");
   const lista = document.querySelector(".lista-usuarios");
+  const formEditar = document.getElementById("formEditarUsuario");
 
+  // Variável para armazenar o ID do usuário sendo editado
+  let usuarioEditandoId = null;
+
+  // Inicializa o Choices.js para disciplinas
   const selectDisciplinas = document.querySelector("#disciplinas");
   if (selectDisciplinas) {
     window.choicesDisciplinas = new Choices(selectDisciplinas, {
@@ -19,7 +24,45 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  // === 1. Função para carregar usuários ===
+  // === 1. Carregar disciplinas do banco de dados ===
+  async function carregarDisciplinas() {
+    try {
+      console.log("Carregando disciplinas...");
+      const response = await fetch("/api/disciplinas");
+      if (!response.ok) throw new Error("Erro ao buscar disciplinas.");
+      
+      const disciplinas = await response.json();
+      console.log("Disciplinas carregadas:", disciplinas);
+      
+      // Limpa as opções atuais
+      selectDisciplinas.innerHTML = "";
+      
+      // Adiciona as disciplinas do banco
+      disciplinas.forEach(disc => {
+        const option = document.createElement("option");
+        option.value = disc.id;
+        option.textContent = disc.nome;
+        selectDisciplinas.appendChild(option);
+      });
+      
+      // Reinicializa o Choices.js
+      if (window.choicesDisciplinas) {
+        window.choicesDisciplinas.destroy();
+        window.choicesDisciplinas = new Choices(selectDisciplinas, {
+          removeItemButton: true,
+          searchEnabled: true,
+          placeholderValue: "Selecione as disciplinas",
+          maxItemCount: 8,
+        });
+      }
+      
+    } catch (error) {
+      console.error("Erro ao carregar disciplinas:", error);
+      alert("❌ Erro ao carregar disciplinas do banco de dados.");
+    }
+  }
+
+  // === 2. Função para carregar usuários ===
   async function carregarUsuarios() {
     try {
       const response = await fetch("/api/usuarios");
@@ -28,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       lista.innerHTML = ""; // limpa a lista atual
 
-      // 🔥 Filtra: remove coordenador (id_tipo = 1)
+      // Filtra: remove coordenador (id_tipo = 1)
       const usuariosFiltrados = usuarios.filter(
         (user) => user.tipoUsuario?.id !== 1
       );
@@ -58,41 +101,60 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll(".btn-editar").forEach((btn) => {
         btn.addEventListener("click", async function () {
           const emailUsuario = this.getAttribute("data-email");
+          console.log("Editando usuário:", emailUsuario);
+          
           try {
-            // ✅ Novo endpoint corrigido
+            // ✅ ENDPOINT CORRETO: buscar-completo
             const res = await fetch(
-              `/api/usuarios/buscar?email=${encodeURIComponent(emailUsuario)}`
+              `/api/usuarios/buscar-completo?email=${encodeURIComponent(emailUsuario)}`
             );
 
-            if (!res.ok) throw new Error("Usuário não encontrado.");
-            const usuario = await res.json();
+            console.log("Status da resposta:", res.status);
 
-            // Preenche o modal com segurança
+            if (!res.ok) {
+              const errorText = await res.text();
+              console.error("Erro na resposta:", errorText);
+              throw new Error("Usuário não encontrado: " + errorText);
+            }
+            
+            const usuario = await res.json();
+            console.log("Usuário recebido:", usuario);
+
+            // Armazena o ID do usuário sendo editado
+            usuarioEditandoId = usuario.id;
+
+            // Preenche o modal
             document.getElementById("nomeEditar").value = usuario.nome || "";
             document.getElementById("emailEditar").value = usuario.email || "";
             document.getElementById("rgmEditar").value = usuario.rgm || "";
-            document.getElementById("senhaEditar").value = ""; // não mostramos a senha
+            document.getElementById("senhaEditar").value = "";
+            document.getElementById("senhaEditar").placeholder = "Deixe em branco para não alterar";
 
             // Tipo de usuário
-            const tipo = usuario.tipoUsuario?.descricao?.toLowerCase() || "";
-            document.getElementById("statusAutenticacao").value =
-              tipo.includes("coordenador") ? "coordenador" : "professor";
+            const tipoId = usuario.tipoUsuario?.id || 2;
+            document.getElementById("statusAutenticacao").value = 
+              tipoId === 1 ? "coordenador" : "professor";
 
             // Status
-            document.getElementById("statusEditar").value = usuario.status || "";
+            document.getElementById("statusEditar").value = usuario.status || "Pendente";
 
             // Disciplinas (Choices.js)
             if (window.choicesDisciplinas) {
               window.choicesDisciplinas.removeActiveItems();
-              if (Array.isArray(usuario.disciplinas)) {
-                usuario.disciplinas.forEach((disc) => {
-                  window.choicesDisciplinas.setChoiceByValue(disc);
+              
+              console.log("Disciplinas do usuário:", usuario.disciplinas);
+              
+              // Marca as disciplinas do usuário
+              if (Array.isArray(usuario.disciplinas) && usuario.disciplinas.length > 0) {
+                usuario.disciplinas.forEach((discId) => {
+                  console.log("Marcando disciplina ID:", discId);
+                  window.choicesDisciplinas.setChoiceByValue(discId.toString());
                 });
               }
             }
           } catch (error) {
             console.error("Erro ao buscar usuário:", error);
-            alert("❌ Não foi possível carregar os dados do usuário.");
+            alert("❌ Não foi possível carregar os dados do usuário.\n" + error.message);
           }
         });
       });
@@ -113,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
               if (del.ok) {
                 alert("✅ " + msg);
-                carregarUsuarios(); // atualiza lista
+                carregarUsuarios();
               } else {
                 alert("⚠️ " + msg);
               }
@@ -129,9 +191,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // === 2. Cadastrar novo e-mail ===
+  // === 3. Cadastrar novo e-mail ===
   form.addEventListener("submit", async function (event) {
-    event.preventDefault(); // evita reload
+    event.preventDefault();
 
     const email = inputEmail.value.trim();
 
@@ -152,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (response.ok) {
         alert("✅ " + message);
         form.reset();
-        carregarUsuarios(); // atualiza lista após cadastro
+        carregarUsuarios();
       } else {
         alert("⚠️ " + message);
       }
@@ -162,6 +224,97 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // === 3. Carregar usuários ao abrir a página ===
+  // === 4. EDITAR USUÁRIO (submit do formulário do modal) ===
+  if (formEditar) {
+    formEditar.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      if (!usuarioEditandoId) {
+        alert("❌ Erro: ID do usuário não encontrado!");
+        return;
+      }
+
+      // Coleta os dados do formulário
+      const nome = document.getElementById("nomeEditar").value.trim();
+      const email = document.getElementById("emailEditar").value.trim();
+      const rgm = document.getElementById("rgmEditar").value.trim();
+      const senha = document.getElementById("senhaEditar").value.trim();
+      const status = document.getElementById("statusEditar").value;
+
+      // Coleta disciplinas selecionadas
+      const disciplinasSelecionadas = window.choicesDisciplinas 
+        ? window.choicesDisciplinas.getValue(true) 
+        : [];
+
+      console.log("Dados para editar:", {
+        id: usuarioEditandoId,
+        nome,
+        email,
+        rgm,
+        status,
+        disciplinas: disciplinasSelecionadas
+      });
+
+      // Validações
+      if (!nome || !email || !rgm) {
+        alert("❌ Preencha todos os campos obrigatórios!");
+        return;
+      }
+
+      try {
+        // Monta o FormData
+        const formData = new URLSearchParams();
+        formData.append("id", usuarioEditandoId);
+        formData.append("nomeCompleto", nome);
+        formData.append("email", email);
+        formData.append("rgm", rgm);
+        formData.append("status", status);
+        
+        // Adiciona senha apenas se foi preenchida
+        if (senha) {
+          formData.append("senha", senha);
+        }
+
+        // Adiciona disciplinas
+        disciplinasSelecionadas.forEach(discId => {
+          formData.append("disciplinas", discId);
+        });
+
+        console.log("Enviando dados:", formData.toString());
+
+        // Faz a requisição
+        const response = await fetch("/api/usuarios/editar", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formData
+        });
+
+        const resultado = await response.text();
+
+        if (response.ok) {
+          alert("✅ " + resultado);
+          
+          // Fecha o modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('editarUsuario'));
+          modal.hide();
+          
+          // Recarrega a lista
+          carregarUsuarios();
+          
+          // Limpa o ID
+          usuarioEditandoId = null;
+        } else {
+          alert("❌ " + resultado);
+        }
+
+      } catch (error) {
+        console.error("Erro ao editar usuário:", error);
+        alert("❌ Erro ao editar usuário. Tente novamente.");
+      }
+    });
+  }
+
+  // === 5. Inicializa ao carregar a página ===
+  carregarDisciplinas();
   carregarUsuarios();
 });
