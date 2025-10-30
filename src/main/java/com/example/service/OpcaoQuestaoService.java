@@ -1,10 +1,12 @@
 package com.example.service;
 
-import com.example.model.OpcaoQuestao; 
-import com.example.repository.OpcaoQuestaoRepository; 
+import java.util.List;
+ 
 import org.springframework.stereotype.Service;
-import java.util.List; 
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
+ 
+import com.example.model.OpcaoQuestao;
+import com.example.repository.OpcaoQuestaoRepository; 
 
 @Service
 public class OpcaoQuestaoService {
@@ -23,7 +25,16 @@ public class OpcaoQuestaoService {
         return opcaoQuestaoRepository.save(novaOpcao);
     }
     
-    public OpcaoQuestao buscarPorId(Integer id) {
+    public OpcaoQuestao buscarPorId(Long id) {
         return opcaoQuestaoRepository.findById(id).orElse(null);
+    }
+
+    public List<OpcaoQuestao> buscarPorQuestaoId(Long questaoId) {
+        return opcaoQuestaoRepository.findByQuestaoId(questaoId);
+    }
+
+    @Transactional
+    public void apagarPorQuestaoId(Long questaoId) {
+        opcaoQuestaoRepository.deleteByQuestaoId(questaoId);
     }
 }

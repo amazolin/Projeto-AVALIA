@@ -1,9 +1,13 @@
 package com.example.repository;
 
-import com.example.model.Questao;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-public interface QuestaoRepository extends JpaRepository<Questao, Integer> {
-    
-   
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.model.Questao;
+
+@Repository
+public interface QuestaoRepository extends JpaRepository<Questao, Long> {
+    List<Questao> findByDisciplinaId(Long disciplinaId);
 }

@@ -1,18 +1,19 @@
 package com.example.service;
 
-import com.example.model.Usuario;
-import com.example.model.TipoUsuario;
-import com.example.model.Disciplina;
-import com.example.model.ProfessorDisciplina;
-import com.example.repository.UsuarioRepository;
-import com.example.repository.TipoUsuarioRepository;
-import com.example.repository.DisciplinaRepository;
-import com.example.repository.ProfessorDisciplinaRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.example.model.Disciplina;
+import com.example.model.ProfessorDisciplina;
+import com.example.model.TipoUsuario;
+import com.example.model.Usuario;
+import com.example.repository.DisciplinaRepository;
+import com.example.repository.ProfessorDisciplinaRepository;
+import com.example.repository.TipoUsuarioRepository;
+import com.example.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
@@ -107,7 +108,7 @@ public class UsuarioService {
         // Adiciona as novas disciplinas
         if (idsDisciplinas != null && !idsDisciplinas.isEmpty()) {
             for (Integer idDisciplina : idsDisciplinas) {
-                Disciplina disciplina = disciplinaRepository.findById(idDisciplina)
+                Disciplina disciplina = disciplinaRepository.findById(Long.valueOf(idDisciplina))
                     .orElseThrow(() -> new RuntimeException("Disciplina não encontrada: " + idDisciplina));
                 
                 ProfessorDisciplina pd = new ProfessorDisciplina(usuario, disciplina);

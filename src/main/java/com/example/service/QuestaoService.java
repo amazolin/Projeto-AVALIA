@@ -1,9 +1,11 @@
 package com.example.service;
 
-import com.example.model.Questao; 
-import com.example.repository.QuestaoRepository; 
+import java.util.List;
+ 
 import org.springframework.stereotype.Service;
-import java.util.List; 
+ 
+import com.example.model.Questao;
+import com.example.repository.QuestaoRepository; 
 
 @Service 
 public class QuestaoService {
@@ -22,7 +24,15 @@ public class QuestaoService {
         return questaoRepository.save(novaQuestao);
     }
     
-    public Questao buscarPorId(Integer id) {
+    public Questao buscarPorId(Long id) {
         return questaoRepository.findById(id).orElse(null);
+    }
+
+    public List<Questao> buscarPorDisciplina(Long disciplinaId) {
+        return questaoRepository.findByDisciplinaId(disciplinaId);
+    }
+
+    public void apagarPorId(Long id) {
+        questaoRepository.deleteById(id);
     }
 }

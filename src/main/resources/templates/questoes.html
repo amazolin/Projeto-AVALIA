@@ -12,9 +12,10 @@
 
 <main class="container py-5">
     <div class="card p-4 p-md-5 border-0 shadow-sm">
-        <h1 class="h2 mb-4 text-center">Cadastro de Nova Questão</h1>
+        <h1 class="h2 mb-4 text-center" th:text="${questao != null ? 'Editar Questão' : 'Cadastro de Nova Questão'}">Cadastro de Nova Questão</h1>
 
-        <form>
+    <!-- Create form -->
+    <form th:if="${questao == null}" th:action="@{/questoes/salvar}" method="post" enctype="multipart/form-data">
             <!-- MATÉRIA -->
             <div class="mb-4">
                 <label for="materia" class="form-label fs-5">Matéria</label>
@@ -24,112 +25,156 @@
                 </select>
             </div>
 
+            <!-- TIPO DE QUESTÃO -->
+            <div class="mb-4">
+                <label for="tipoQuestao" class="form-label fs-5">Tipo de Questão</label>
+                <select class="form-select form-select-lg" id="tipoQuestao" name="tipoQuestao" required onchange="toggleAlternativas()">
+                    <option selected disabled value="">Selecione o tipo</option>
+                    <option value="multipla_escolha">Múltipla Escolha</option>
+                    <option value="verdadeiro_falso">Verdadeiro ou Falso</option>
+                </select>
+            </div>
+
             <!-- ENUNCIADO -->
             <div class="mb-4">
                 <label for="enunciado" class="form-label fs-5">Enunciado da Questão</label>
-                <textarea class="form-control" id="enunciado" rows="5"
+                <textarea class="form-control" id="enunciado" name="enunciado" rows="5"
                     placeholder="Digite o texto principal da questão aqui..." required></textarea>
             </div>
 
             <!-- IMAGEM -->
             <div class="mb-4">
                 <label for="imagemQuestao" class="form-label">Imagem de Apoio (Opcional)</label>
-                <input class="form-control" type="file" id="imagemQuestao" accept="image/*">
+                <input class="form-control" type="file" id="imagemQuestao" name="imagemQuestao" accept="image/*">
             </div>
 
             <hr class="my-4">
 
-            <!-- NAV TABS -->
-            <ul class="nav nav-tabs mb-3" id="tipoQuestaoTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="alternativas-tab" data-bs-toggle="tab"
-                        data-bs-target="#alternativas" type="button" role="tab"
-                        aria-controls="alternativas" aria-selected="true">
-                        <i class="bi bi-list-ol me-1"></i> Múltipla Escolha
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="vf-tab" data-bs-toggle="tab"
-                        data-bs-target="#vf" type="button" role="tab"
-                        aria-controls="vf" aria-selected="false">
-                        <i class="bi bi-check2-square me-1"></i> Verdadeiro ou Falso
-                    </button>
-                </li>
-            </ul>
+            <!-- ALTERNATIVAS MÚLTIPLA ESCOLHA -->
+            <div id="alternativasMultipla" style="display: none;">
+                <h3 class="fs-5 mb-3">Alternativas (Múltipla Escolha)</h3>
+                <p class="text-muted">Preencha as 5 alternativas e marque a opção correta.</p>
 
-            <!-- TAB CONTENT -->
-            <div class="tab-content" id="tipoQuestaoTabContent">
-                <!-- QUESTÕES DE ALTERNATIVA -->
-                <div class="tab-pane fade show active" id="alternativas" role="tabpanel" aria-labelledby="alternativas-tab">
-                    <h3 class="fs-5 mb-3">Alternativas</h3>
-                    <p class="text-muted">Preencha as alternativas e marque a opção correta.</p>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="A" id="radioA" required>
-                            <label class="form-check-label ms-2 fw-bold" for="radioA">A</label>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Texto da alternativa A" required>
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="A" id="radioA">
+                        <label class="form-check-label ms-2 fw-bold" for="radioA">A</label>
                     </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="B" id="radioB" required>
-                            <label class="form-check-label ms-2 fw-bold" for="radioB">B</label>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Texto da alternativa B" required>
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="C" id="radioC" required>
-                            <label class="form-check-label ms-2 fw-bold" for="radioC">C</label>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Texto da alternativa C" required>
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="D" id="radioD" required>
-                            <label class="form-check-label ms-2 fw-bold" for="radioD">D</label>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Texto da alternativa D" required>
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="E" id="radioE" required>
-                            <label class="form-check-label ms-2 fw-bold" for="radioE">E</label>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Texto da alternativa E" required>
-                    </div>
+                    <input type="text" class="form-control alternativa-multipla" name="alternativaText" placeholder="Texto da alternativa A">
                 </div>
 
-                <!-- QUESTÕES VERDADEIRO/FALSO -->
-                <div class="tab-pane fade" id="vf" role="tabpanel" aria-labelledby="vf-tab">
-                    <h3 class="fs-5 mb-3">Verdadeiro ou Falso</h3>
-                    <p class="text-muted">Selecione a resposta correta para esta questão.</p>
-
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="respostaVF" id="verdadeiro" value="V" required>
-                        <label class="form-check-label fs-5" for="verdadeiro">
-                            Verdadeiro
-                        </label>
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="B" id="radioB">
+                        <label class="form-check-label ms-2 fw-bold" for="radioB">B</label>
                     </div>
+                    <input type="text" class="form-control alternativa-multipla" name="alternativaText" placeholder="Texto da alternativa B">
+                </div>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="respostaVF" id="falso" value="F" required>
-                        <label class="form-check-label fs-5" for="falso">
-                            Falso
-                        </label>
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="C" id="radioC">
+                        <label class="form-check-label ms-2 fw-bold" for="radioC">C</label>
                     </div>
+                    <input type="text" class="form-control alternativa-multipla" name="alternativaText" placeholder="Texto da alternativa C">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="D" id="radioD">
+                        <label class="form-check-label ms-2 fw-bold" for="radioD">D</label>
+                    </div>
+                    <input type="text" class="form-control alternativa-multipla" name="alternativaText" placeholder="Texto da alternativa D">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="E" id="radioE">
+                        <label class="form-check-label ms-2 fw-bold" for="radioE">E</label>
+                    </div>
+                    <input type="text" class="form-control alternativa-multipla" name="alternativaText" placeholder="Texto da alternativa E">
+                </div>
+            </div>
+
+            <!-- ALTERNATIVAS VERDADEIRO/FALSO -->
+            <div id="alternativasVF" style="display: none;">
+                <h3 class="fs-5 mb-3">Verdadeiro ou Falso</h3>
+                <p class="text-muted">Marque se a afirmação é verdadeira ou falsa.</p>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="A" id="radioVerdadeiro">
+                        <label class="form-check-label ms-2 fw-bold" for="radioVerdadeiro">Verdadeiro</label>
+                    </div>
+                    <input type="hidden" name="alternativaText" value="Verdadeiro">
+                    <span class="form-control bg-light">Verdadeiro</span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="radio" name="alternativaCorreta" value="B" id="radioFalso">
+                        <label class="form-check-label ms-2 fw-bold" for="radioFalso">Falso</label>
+                    </div>
+                    <input type="hidden" name="alternativaText" value="Falso">
+                    <span class="form-control bg-light">Falso</span>
                 </div>
             </div>
 
             <!-- BOTÃO -->
             <div class="d-flex justify-content-end mt-4">
+                <a th:href="@{/banco-questoes}" class="btn btn-outline-secondary btn-lg px-4 me-2">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                </a>
                 <button type="submit" class="btn btn-primary-custom btn-lg px-5">
                     <i class="bi bi-check-circle me-2"></i>Salvar Questão
+                </button>
+            </div>
+        </form>
+
+    <!-- Edit form (prefilled) -->
+    <form th:if="${questao != null}" th:action="@{/questoes/editar/{id}(id=${questao.id})}" method="post" enctype="multipart/form-data">
+            <!-- MATÉRIA -->
+            <div class="mb-4">
+                <label for="materiaEdit" class="form-label fs-5">Matéria</label>
+                <select class="form-select form-select-lg" id="materiaEdit" name="disciplinaId" required>
+                    <option selected disabled value="">Selecione a matéria</option>
+                    <option th:each="disc : ${listaDisciplinas}" th:value="${disc.id}" th:text="${disc.nome}"
+                        th:selected="${questao.disciplina != null} ? ${disc.id} == ${questao.disciplina.id} : false"></option>
+                </select>
+            </div>
+
+            <!-- ENUNCIADO -->
+            <div class="mb-4">
+                <label for="enunciadoEdit" class="form-label fs-5">Enunciado da Questão</label>
+                <textarea class="form-control" id="enunciadoEdit" name="enunciado" rows="5" required
+                    th:text="${questao.enunciado}"></textarea>
+            </div>
+
+            <hr class="my-4">
+            <h3 class="fs-5 mb-3">Alternativas</h3>
+            <p class="text-muted">Preencha as alternativas e marque a opção correta. Para questões Verdadeiro/Falso, use apenas as duas primeiras.</p>
+
+            <div th:if="${opcoes == null or #lists.isEmpty(opcoes)}" class="alert alert-warning">Nenhuma alternativa cadastrada para essa questão.</div>
+            
+            <div th:each="op,iterStat : ${opcoes}" class="input-group mb-3">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="radio" name="alternativaCorreta"
+                           th:id="${'radioEdit' + iterStat.index}"
+                           th:value="${'ABCDE'.substring(iterStat.index, iterStat.index + 1)}"
+                           th:checked="${op.correta}">
+                    <label class="form-check-label ms-2 fw-bold" th:for="${'radioEdit' + iterStat.index}"
+                           th:text="${'ABCDE'.substring(iterStat.index, iterStat.index + 1)}"></label>
+                </div>
+                <input type="text" class="form-control" name="alternativaText" th:value="${op.texto}" 
+                       th:required="${iterStat.index < 2}">
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <a th:href="@{/banco-questoes}" class="btn btn-outline-secondary btn-lg px-4 me-2">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary-custom btn-lg px-5">
+                    <i class="bi bi-check-circle me-2"></i>Salvar Alterações
                 </button>
             </div>
         </form>
@@ -137,5 +182,42 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleAlternativas() {
+    const tipoSelect = document.getElementById('tipoQuestao');
+    const alternativasMultipla = document.getElementById('alternativasMultipla');
+    const alternativasVF = document.getElementById('alternativasVF');
+    
+    // Oculta ambas as seções
+    alternativasMultipla.style.display = 'none';
+    alternativasVF.style.display = 'none';
+    
+    // Remove required de todos os inputs
+    document.querySelectorAll('.alternativa-multipla').forEach(input => {
+        input.removeAttribute('required');
+    });
+    document.querySelectorAll('input[name="alternativaCorreta"]').forEach(radio => {
+        radio.removeAttribute('required');
+    });
+    
+    // Mostra a seção apropriada
+    if (tipoSelect.value === 'multipla_escolha') {
+        alternativasMultipla.style.display = 'block';
+        // Torna obrigatórias as alternativas múltipla escolha
+        document.querySelectorAll('.alternativa-multipla').forEach(input => {
+            input.setAttribute('required', 'required');
+        });
+        document.querySelectorAll('#alternativasMultipla input[name="alternativaCorreta"]').forEach(radio => {
+            radio.setAttribute('required', 'required');
+        });
+    } else if (tipoSelect.value === 'verdadeiro_falso') {
+        alternativasVF.style.display = 'block';
+        // Torna obrigatórios os radios de V/F
+        document.querySelectorAll('#alternativasVF input[name="alternativaCorreta"]').forEach(radio => {
+            radio.setAttribute('required', 'required');
+        });
+    }
+}
+</script>
 </body>
 </html>

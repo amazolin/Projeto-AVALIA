@@ -1,12 +1,13 @@
 package com.example.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity 
 @Table(name = "opcoes_questao") 
@@ -14,13 +15,20 @@ public class OpcaoQuestao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_opcao")
     private Long id;
 
+    @Column(name = "texto_opcao")
     private String texto;
+    
+    @Column(name = "letra")
+    private String letra;
+    
+    @Column(name = "correta")
     private boolean correta; 
     
     @ManyToOne
-    @JoinColumn(name = "questao_id")
+    @JoinColumn(name = "id_questao")
     private Questao questao;
 
     public OpcaoQuestao() {
@@ -46,6 +54,14 @@ public class OpcaoQuestao {
 
     public void setTexto(String texto) {
         this.texto = texto;
+    }
+
+    public String getLetra() {
+        return letra;
+    }
+
+    public void setLetra(String letra) {
+        this.letra = letra;
     }
 
     public boolean isCorreta() {
