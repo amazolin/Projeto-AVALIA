@@ -18,29 +18,64 @@
 	href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 </head>
 <body>
-	<header class="topo">
-		<div class="logo">
-			<i class="bi bi-book-half"></i> <span class="nome-sistema">Avalia</span>
-		</div>
-	</header>
 
-	<div class="container-principal">
-		<h1>Gerenciar Usuários</h1>
+	<!-- Navbar igual à da tela coordenador.html -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-white">
+		<div class="container-fluid">
+			<a class="navbar-brand fw-bold" href="/coordenador"> 
+				<i class="bi bi-book-half"></i> Avalia
+			</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+					<li class="nav-item">
+						<a class="nav-link" href="/banco-questoes">
+							<i class="bi bi-patch-question-fill me-1"></i> Gerenciar Questões
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<i class="bi bi-file-earmark-text-fill me-1"></i> Gerar Provas
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" href="/usuarios">
+							<i class="bi bi-people-fill me-1"></i> Gerenciar Usuários
+						</a>
+					</li>
+					<li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+						<a href="/login" class="btn btn-outline-primary-custom">
+							<i class="bi bi-box-arrow-in-right"></i> Sair
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Conteúdo principal -->
+	<main class="container py-5">
+		<h1 class="mb-4 text-center">Gerenciar Usuários</h1>
 
 		<!-- Formulário de adicionar usuário -->
-		<form class="form-email" id="formEmail">
-			<input type="email" name="email" id="emailInput" class="form-control"
+		<form class="d-flex justify-content-center mb-4" id="formEmail">
+			<input type="email" name="email" id="emailInput" class="form-control w-50 me-2"
 				placeholder="Digite o e-mail do usuário" required>
-			<button type="submit" class="btn btn-enviar">Enviar</button>
+			<button type="submit" class="btn btn-primary">Enviar</button>
 		</form>
 
 		<!-- Lista de usuários -->
-		<div class="lista-usuarios">
+		<div class="lista-usuarios container">
 			<!-- Os usuários serão carregados dinamicamente aqui -->
 		</div>
-	</div>
+	</main>
 
-	<!-- Modal (Pop-up Editar)-->
+	<!-- Modal (Pop-up Editar) -->
 	<div class="modal fade" id="editarUsuario" tabindex="-1"
 		aria-labelledby="editarUsuarioLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -55,47 +90,49 @@
 				<div class="modal-body">
 					<form id="formEditarUsuario">
 						<div class="mb-3">
-							<label for="nomeEditar" class="form-label">Nome *</label> <input
-								type="text" class="form-control" id="nomeEditar" required>
+							<label for="nomeEditar" class="form-label">Nome *</label> 
+							<input type="text" class="form-control" id="nomeEditar" required>
 						</div>
 						<div class="mb-3">
-							<label for="emailEditar" class="form-label">E-mail *</label> <input
-								type="email" class="form-control" id="emailEditar" required>
+							<label for="emailEditar" class="form-label">E-mail *</label> 
+							<input type="email" class="form-control" id="emailEditar" required>
 						</div>
 						<div class="mb-3">
-							<label for="rgmEditar" class="form-label">RGM *</label> <input
-								type="text" class="form-control" id="rgmEditar" required>
+							<label for="rgmEditar" class="form-label">RGM *</label> 
+							<input type="text" class="form-control" id="rgmEditar" required>
 						</div>
 						<div class="mb-3">
-							<label for="senhaEditar" class="form-label">Nova Senha
-								(opcional)</label> <input type="password" class="form-control"
+							<label for="senhaEditar" class="form-label">Nova Senha (opcional)</label> 
+							<input type="password" class="form-control"
 								id="senhaEditar" placeholder="Deixe em branco para não alterar">
-							<small class="form-text text-muted">Deixe em branco para
-								manter a senha atual</small>
+							<small class="form-text text-muted">
+								Deixe em branco para manter a senha atual
+							</small>
 						</div>
 						<div class="mb-3">
 							<label for="statusAutenticacao" class="form-label">Autenticação</label>
 							<select class="form-select" id="statusAutenticacao" disabled>
 								<option value="professor">Professor</option>
 								<option value="coordenador">Coordenador</option>
-							</select> <small class="form-text text-muted">O tipo de usuário
-								não pode ser alterado</small>
+							</select>
+							<small class="form-text text-muted">
+								O tipo de usuário não pode ser alterado
+							</small>
 						</div>
 						<div class="mb-3">
-							<label for="disciplinas" class="form-label">Disciplinas</label> <select
-								multiple class="form-select" id="disciplinas">
+							<label for="disciplinas" class="form-label">Disciplinas</label>
+							<select multiple class="form-select" id="disciplinas">
 								<!-- As disciplinas serão carregadas dinamicamente do banco -->
 							</select>
 						</div>
 						<div class="mb-3">
-							<label for="statusEditar" class="form-label">Status</label> <select
-								class="form-select" id="statusEditar" required>
+							<label for="statusEditar" class="form-label">Status</label> 
+							<select class="form-select" id="statusEditar" required>
 								<option value="Concluído">Concluído</option>
 								<option value="Pendente">Pendente</option>
 							</select>
 						</div>
-						<button type="submit" class="btn btn-primary">Salvar
-							Alterações</button>
+						<button type="submit" class="btn btn-primary w-100">Salvar Alterações</button>
 					</form>
 				</div>
 
