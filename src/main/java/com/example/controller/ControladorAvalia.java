@@ -148,25 +148,37 @@ public class ControladorAvalia {
 
 	// --- LOGIN (POST) ---
 	@PostMapping("/login")
-	public String realizarLogin(@RequestParam String email, @RequestParam String senha, HttpSession session,
-			Model model) {
+	public String realizarLogin(@RequestParam String email, @RequestParam String senha, 
+	                           HttpSession session, Model model) {
 
-		Usuario usuario = usuarioService.buscarPorEmailSenha(email.trim(), senha.trim());
+	    Usuario usuario = usuarioService.buscarPorEmailSenha(email.trim(), senha.trim());
 
-		if (usuario != null) {
-			session.setAttribute("usuarioLogado", usuario);
-
-			// Verifica se é o coordenador
-			if (usuario.getTipoUsuario() != null && usuario.getTipoUsuario().getId() == 1) {
-				return "redirect:/coordenador";
-			} else {
-				model.addAttribute("erro", "Acesso restrito ao coordenador.");
-				return "login";
-			}
-		} else {
-			model.addAttribute("erro", "E-mail ou senha inválidos.");
-			return "login";
-		}
+	    if (usuario != null) {
+	        // Verifica se é o coordenador (id_tipo = 1)
+	        if (usuario.getTipoUsuario() != null && usuario.getTipoUsuario().getId() == 1) {
+	            session.setAttribute("usuarioLogado", usuario);
+	            return "redirect:/coordenador";
+	        } 
+	        // Verifica se é professor (id_tipo = 2)
+	        else if (usuario.getTipoUsuario() != null && usuario.getTipoUsuario().getId() == 2) {
+	            // Verifica o status do professor
+	            if ("Concluído".equalsIgnoreCase(usuario.getStatus())) {
+	                session.setAttribute("usuarioLogado", usuario);
+	                return "redirect:/professor";
+	            } else {
+	                model.addAttribute("erro", "Seu cadastro ainda não foi aprovado pelo coordenador. Aguarde a aprovação.");
+	                return "login";
+	            }
+	        } 
+	        // Tipo de usuário não reconhecido
+	        else {
+	            model.addAttribute("erro", "Tipo de usuário inválido.");
+	            return "login";
+	        }
+	    } else {
+	        model.addAttribute("erro", "E-mail ou senha inválidos.");
+	        return "login";
+	    }
 	}
 
 	// --- CADASTRAR USUÁRIO (COMPLETO) ---
