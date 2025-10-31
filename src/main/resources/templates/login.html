@@ -27,9 +27,10 @@
       <p>Faça login para acessar o portal do educador ou do aluno.</p>
 
       <!-- Mensagem de erro (exibida se o controller adicionar "erro" ao Model) -->
-      <div th:if="${erro}" class="alert alert-danger" style="color: red; margin-bottom: 10px;">
-        <p th:text="${erro}"></p>
-      </div>
+      <div th:if="${erro}" class="alert alert-danger d-flex align-items-center" role="alert" style="margin-bottom: 20px;">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+  <div th:text="${erro}"></div>
+</div>
 
       <!-- FORMULÁRIO CORRIGIDO -->
       <form action="/login" method="post">
