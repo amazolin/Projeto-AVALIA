@@ -13,7 +13,7 @@
 </head>
 <body>
 
-	<!-- Navbar | Por ora: Gerenciar questões, provas e usuários. -->
+	<!-- Navbar para Portal do Educador (página intermediária) -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-white">
 		<div class="container-fluid">
 			<a class="navbar-brand fw-bold" href="/coordenador"> <i
@@ -27,12 +27,16 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-					<li class="nav-item"><a class="nav-link active" href="/banco-questoes"><i
-							class="bi bi-patch-question-fill me-1"></i> Gerenciar Questões</a></li>
-					<li class="nav-item"><a class="nav-link" href="#"><i
-							class="bi bi-file-earmark-text-fill me-1"></i> Gerar Provas</a></li>
-					<li class="nav-item"><a class="nav-link" href="/usuarios"><i
-							class="bi bi-people-fill me-1"></i> Gerenciar Usuários</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="/banco-questoes"> <i
+							class="bi bi-patch-question-fill me-1"></i> Gerenciar Questões
+					</a></li>
+					<li class="nav-item"><a class="nav-link" href="/gerar-provas">
+							<i class="bi bi-file-earmark-text-fill me-1"></i> Gerar Provas
+					</a></li>
+					<li class="nav-item"><a class="nav-link" href="/usuarios">
+							<i class="bi bi-people-fill me-1"></i> Gerenciar Usuários
+					</a></li>
 					<li class="nav-item ms-lg-3 mt-2 mt-lg-0"><a href="/login"
 						class="btn btn-outline-primary-custom"> <i
 							class="bi bi-box-arrow-in-right"></i> Sair
@@ -67,7 +71,8 @@
 						<h5 class="card-title">Banco de Questões</h5>
 						<p class="card-text">Adicione, edite, organize e categorize
 							todas as suas questões em um único lugar.</p>
-						<a href="/banco-questoes" class="btn btn-outline-primary-custom mt-auto">Acessar
+						<a href="/banco-questoes"
+							class="btn btn-outline-primary-custom mt-auto">Acessar
 							Questões</a>
 					</div>
 				</div>

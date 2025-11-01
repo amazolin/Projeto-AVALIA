@@ -1,4 +1,12 @@
 :root {
+    --cor-principal-roxa: #6a11cb;
+    --cor-roxa-escura: #5b0fa8;
+    --cor-roxa-clara: #f8f7fc;
+    --cor-degrade-inicio: #6a11cb;
+    --cor-degrade-fim: #2575fc;
+    --cor-cinza-texto: #6c757d;
+    
+    /* Aliases para manter compatibilidade */
     --cor-principal: #6a11cb;
     --cor-secundaria: #2575fc;
     --cor-fundo: #f8f6ff;
@@ -8,38 +16,159 @@
 }
 
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: var(--cor-fundo);
+    background-color: var(--cor-roxa-clara);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--cor-texto);
     margin: 0;
     padding: 0;
 }
 
-.topo {
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* ========================================
+   NAVBAR - ESTILO CONSISTENTE
+   ======================================== */
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    background-color: #fff !important;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.logo i {
-    color: var(--cor-principal);
-    font-size: 1.4rem;
-}
-
-.logo .nome-sistema {
-    color: var(--cor-principal);
+.navbar-brand {
+    color: var(--cor-principal-roxa) !important;
     font-weight: bold;
-    font-size: 1.3rem;
+    transition: color 0.2s;
 }
+
+.navbar-brand:hover {
+    color: var(--cor-roxa-escura) !important;
+}
+
+.navbar-brand i {
+    color: var(--cor-principal-roxa);
+}
+
+/* Links da navbar */
+.navbar .nav-link,
+.topo .nav-link,
+nav a:not(.navbar-brand):not(.btn) {
+    color: #555 !important;
+    transition: color 0.2s, font-weight 0.2s;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.navbar .nav-link:hover,
+.topo .nav-link:hover,
+nav a:not(.navbar-brand):not(.btn):hover {
+    color: var(--cor-principal-roxa) !important;
+    font-weight: 500;
+}
+
+/* Página ativa - permanentemente roxa */
+.navbar .nav-link.active,
+.topo .nav-link.active,
+nav a.active:not(.navbar-brand):not(.btn) {
+    color: var(--cor-principal-roxa) !important;
+    font-weight: 500 !important;
+}
+
+/* Ícones nos links */
+.navbar .nav-link i,
+.topo .nav-link i,
+nav a:not(.navbar-brand):not(.btn) i {
+    transition: color 0.2s;
+    color: inherit;
+}
+
+.navbar .nav-link:hover i,
+.topo .nav-link:hover i,
+nav a:not(.navbar-brand):not(.btn):hover i {
+    color: var(--cor-principal-roxa);
+}
+
+.navbar .nav-link.active i,
+.topo .nav-link.active i,
+nav a.active:not(.navbar-brand):not(.btn) i {
+    color: var(--cor-principal-roxa) !important;
+}
+
+/* ========================================
+   BOTÕES PADRÃO
+   ======================================== */
+
+.btn-primary-custom {
+    background-image: linear-gradient(to right, var(--cor-degrade-inicio), var(--cor-degrade-fim));
+    border: none;
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.btn-outline-primary-custom {
+    color: var(--cor-principal-roxa);
+    border-color: var(--cor-principal-roxa);
+    transition: all 0.2s;
+}
+
+.btn-outline-primary-custom:hover {
+    background-color: var(--cor-principal-roxa);
+    color: white;
+    border-color: var(--cor-principal-roxa);
+}
+
+/* Botão enviar (compatibilidade) */
+.btn-enviar {
+    background: linear-gradient(90deg, var(--cor-principal), var(--cor-secundaria));
+    color: #fff;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-enviar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   SEÇÃO HERO
+   ======================================== */
+
+.hero-section {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+}
+
+.hero-section .display-5 {
+    color: #333;
+}
+
+/* ========================================
+   CARDS
+   ======================================== */
+
+.card-icon {
+    font-size: 3rem;
+    color: var(--cor-principal-roxa);
+}
+
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ========================================
+   CONTAINERS PRINCIPAIS
+   ======================================== */
 
 .container-principal {
     max-width: 900px;
@@ -49,6 +178,74 @@ body {
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
+
+/* ========================================
+   FORMULÁRIO DE CADASTRO DE QUESTÃO
+   ======================================== */
+
+.form-cadastro-questao {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.form-cadastro-questao h2,
+.form-cadastro-questao h3 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    color: var(--cor-principal-roxa);
+    text-align: center;
+}
+
+.form-cadastro-questao label {
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+    color: #333;
+}
+
+.form-cadastro-questao input,
+.form-cadastro-questao select,
+.form-cadastro-questao textarea {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    width: 100%;
+}
+
+.alternativas {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.alternativas label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+}
+
+.opcoes-tipo-questao {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.opcoes-tipo-questao button {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+}
+
+/* ========================================
+   PÁGINA DE USUÁRIOS
+   ======================================== */
 
 h1 {
     color: var(--cor-principal);
@@ -63,12 +260,6 @@ h1 {
 
 .form-email input {
     flex: 1;
-}
-
-.btn-enviar {
-    background: linear-gradient(90deg, var(--cor-principal), var(--cor-secundaria));
-    color: #fff;
-    border: none;
 }
 
 .lista-usuarios {
@@ -110,26 +301,84 @@ h1 {
     border-radius: 6px;
     margin-left: 0.3rem;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-editar {
-    background: linear-gradient(90deg, #28a745, #71dd8a); /* verde degradê */
+    background: linear-gradient(90deg, #28a745, #71dd8a);
 }
 
 .btn-excluir {
-    background: linear-gradient(90deg, #dc3545, #f86c6b); /* vermelho degradê */
+    background: linear-gradient(90deg, #dc3545, #f86c6b);
+}
+
+.botoes-acao button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .botoes-acao button i {
     font-size: 1rem;
 }
 
+/* ========================================
+   CHOICES.JS
+   ======================================== */
+
 .choices {
-  width: 100% !important;
+    width: 100% !important;
 }
 
-/* Garante que o campo interno também se adapte */
 .choices__inner {
-  width: 100% !important;
-  box-sizing: border-box !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* ========================================
+   LOGIN
+   ======================================== */
+
+.body-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.form-signin {
+    max-width: 450px;
+}
+
+.form-floating:focus-within {
+    z-index: 2;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 5;
+    color: #6c757d;
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+@media (max-height: 800px) {
+    .form-cadastro-questao {
+        padding: 8px;
+    }
+    body {
+        zoom: 0.9;
+    }
+}
+
+@media (max-height: 700px) {
+    body {
+        zoom: 0.85;
+    }
 }
