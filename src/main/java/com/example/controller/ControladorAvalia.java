@@ -53,6 +53,7 @@ public class ControladorAvalia {
 		model.addAttribute("usuario", new Usuario());
 		return "cadastro";
 	}
+	
 
 	// LISTAR USUÁRIOS (exceto coordenador)
 	@GetMapping("/usuarios")

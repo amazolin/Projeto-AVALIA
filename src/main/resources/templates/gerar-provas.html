@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Provas - Avalia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/gerar-provas.css}">
+</head>
+<body>
+
+	<!-- Navbar para usar em todas as páginas -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="/coordenador">
+            <i class="bi bi-book-half"></i> Avalia
+        </a>
+        <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/banco-questoes">
+                        <i class="bi bi-patch-question-fill me-1"></i> Gerenciar Questões
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="gerar-provas">
+                        <i class="bi bi-file-earmark-text-fill me-1"></i> Gerar Provas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/usuarios">
+                        <i class="bi bi-people-fill me-1"></i> Gerenciar Usuários
+                    </a>
+                </li>
+                <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                    <a href="/login" class="btn btn-outline-primary-custom">
+                        <i class="bi bi-box-arrow-in-right"></i> Sair
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3">Gerar Nova Prova</h1>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Painel Esquerdo: Banco de Questões -->
+        <div class="col-lg-8">
+            <div class="card p-4">
+                <!-- Filtro de Disciplinas -->
+                <form method="get" class="row g-3 align-items-center mb-4" th:action="@{/gerar-provas}">
+                    <div class="col-auto">
+                        <label for="disciplina" class="col-form-label">Matéria</label>
+                    </div>
+                    <div class="col-sm-7">
+                        <select id="disciplina" name="disciplinaId" class="form-select" required>
+                            <option value="" selected disabled>Selecione uma matéria</option>
+                            <option th:each="disc : ${listaDisciplinas}"
+                                    th:value="${disc.id}"
+                                    th:text="${disc.nome}">Banco de Dados em MySQL</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+                    </div>
+                </form>
+
+                <!-- Lista de Questões -->
+                <div class="questoes-disponiveis">
+                    <div th:if="${questoes == null or #lists.isEmpty(questoes)}" class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Selecione uma matéria para visualizar as questões disponíveis.
+                    </div>
+
+                    <div class="list-group" th:if="${questoes != null and not #lists.isEmpty(questoes)}">
+                        <div th:each="q : ${questoes}" 
+                             class="list-group-item list-group-item-action flex-column align-items-start questao-item"
+                             th:data-questao-id="${q.id}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1" th:text="${q.disciplina != null ? q.disciplina.nome : 'Sem disciplina'}">
+                                    Banco de Dados em MySQL
+                                </h5>
+                                <small class="text-muted" th:text="'ID: ' + ${q.id}">ID: 1</small>
+                            </div>
+                            <p class="mb-1" th:text="${q.enunciado}">
+                                Qual comando é usado para selecionar dados em MySQL?
+                            </p>
+                            <small class="text-muted d-block mb-2">
+                                <i class="bi bi-person-circle"></i> 
+                                Criado por: <span th:text="${q.criador != null ? q.criador.nome : 'Desconhecido'}">Jadir</span>
+                            </small>
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-sm btn-success btn-selecionar-questao"
+                                        th:data-id="${q.id}"
+                                        th:data-enunciado="${q.enunciado}"
+                                        th:data-disciplina="${q.disciplina != null ? q.disciplina.nome : 'Sem disciplina'}">
+                                    <i class="bi bi-plus-circle"></i> Selecionar
+                                </button>
+                                <a th:href="@{/questoes/ver/{id}(id=${q.id})}" 
+                                   class="btn btn-sm btn-info text-white">
+                                    <i class="bi bi-eye"></i> Visualizar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel Direito: Questões Selecionadas -->
+        <div class="col-lg-4">
+            <div class="card p-4 painel-selecionadas sticky-top">
+                <div class="mb-3">
+                    <h5 class="mb-1">Questões Selecionadas</h5>
+                    <small class="text-muted">
+                        <span id="contador-questoes">0</span> questões adicionadas
+                    </small>
+                </div>
+
+                <div id="lista-selecionadas" class="lista-selecionadas mb-3">
+                    <div class="empty-state text-center py-5">
+                        <i class="bi bi-clipboard2-x display-4 text-muted mb-3"></i>
+                        <p class="text-muted">Nenhuma questão selecionada</p>
+                        <small class="text-muted">
+                            Selecione questões ao lado para criar a prova.
+                        </small>
+                    </div>
+                </div>
+
+                <button type="button" id="btn-criar-prova" class="btn btn-primary w-100" disabled>
+                    <i class="bi bi-file-earmark-plus"></i> Criar Prova
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/gerar-provas.js}"></script>
+</body>
+</html>
