@@ -1,4 +1,4 @@
-// gerar-provas.js - Versão Final com LocalStorage
+// gerar-provas.js - Versão com Persistência para Provas Multidisciplinares
 
 let questoesSelecionadas = [];
 
@@ -14,11 +14,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // Carrega questões salvas no localStorage
     carregarQuestoesSalvas();
     
-    setTimeout(() => {
-        configurarBotoesSelecao();
-        atualizarInterface();
-    }, 100);
+    // Atualiza a interface imediatamente (painel direito)
+    atualizarInterface();
+    
+    // Aguarda os botões carregarem e configura
+    inicializarBotoes();
 });
+
+function inicializarBotoes() {
+    // Tenta configurar após pequeno delay
+    setTimeout(() => {
+        const botoes = document.querySelectorAll('.btn-selecionar-questao');
+        if (botoes.length > 0) {
+            console.log(`✅ ${botoes.length} botões encontrados, configurando...`);
+            configurarBotoesSelecao();
+            marcarBotoesJaSelecionados();
+        } else {
+            console.log('⏳ Nenhum botão encontrado ainda...');
+        }
+    }, 200);
+    
+    // Tenta novamente após 600ms (garantia extra)
+    setTimeout(() => {
+        const botoes = document.querySelectorAll('.btn-selecionar-questao');
+        if (botoes.length > 0) {
+            console.log('🔄 Verificação adicional dos botões');
+            marcarBotoesJaSelecionados();
+        }
+    }, 600);
+}
 
 // ==================== LOCALSTORAGE ====================
 
@@ -75,7 +99,7 @@ function configurarBotoesSelecao() {
     const botoesAtualizados = document.querySelectorAll('.btn-selecionar-questao');
     
     botoesAtualizados.forEach((botao, index) => {
-        const questaoId = botao.getAttribute('data-id');
+        const questaoId = parseInt(botao.getAttribute('data-id'));
         const enunciado = botao.getAttribute('data-enunciado');
         const disciplina = botao.getAttribute('data-disciplina');
         
@@ -113,6 +137,25 @@ function configurarBotoesSelecao() {
     console.log(`✅ ${botoesAtualizados.length} botões configurados`);
 }
 
+// ==================== MARCAR BOTÕES JÁ SELECIONADOS ====================
+
+function marcarBotoesJaSelecionados() {
+    if (questoesSelecionadas.length === 0) return;
+    
+    console.log(`🔍 Marcando ${questoesSelecionadas.length} questões já selecionadas`);
+    
+    questoesSelecionadas.forEach(questao => {
+        const btn = document.querySelector(`.btn-selecionar-questao[data-id="${questao.id}"]`);
+        if (btn) {
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-secondary');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-check-circle"></i> Selecionada';
+            console.log(`✅ Botão da questão ${questao.id} marcado como selecionado`);
+        }
+    });
+}
+
 // ==================== SELECIONAR QUESTÃO ====================
 
 function selecionarQuestao(questao, botao) {
@@ -129,6 +172,9 @@ function selecionarQuestao(questao, botao) {
     questoesSelecionadas.push(questao);
     console.log('✅ Total de questões:', questoesSelecionadas.length);
     
+    // Salva no localStorage
+    salvarQuestoesNoStorage();
+    
     // Atualiza o botão
     if (botao) {
         botao.classList.remove('btn-success');
@@ -140,7 +186,6 @@ function selecionarQuestao(questao, botao) {
     // Atualiza a interface
     atualizarInterface();
     
-    // Feedback visual sutil (apenas no console, sem popup)
     console.log(`✅ Questão ${questao.id} adicionada com sucesso`);
 }
 
@@ -154,6 +199,9 @@ function removerQuestao(questaoId) {
     
     if (questoesSelecionadas.length < tamanhoAntes) {
         console.log('✅ Questão removida. Total:', questoesSelecionadas.length);
+        
+        // Salva no localStorage
+        salvarQuestoesNoStorage();
         
         atualizarInterface();
         
@@ -361,6 +409,7 @@ async function confirmarCriarProva() {
         
         // Limpa seleções
         questoesSelecionadas = [];
+        limparQuestoesDoStorage();
         atualizarInterface();
         
         // Reseta todos os botões
@@ -371,7 +420,7 @@ async function confirmarCriarProva() {
             btn.innerHTML = '<i class="bi bi-plus-circle"></i> Selecionar';
         });
         
-        // Mensagem de sucesso (apenas esta mensagem permanece)
+        // Mensagem de sucesso
         mostrarToast(`Prova "${titulo}" criada com sucesso!`, 'success');
         
     } catch (error) {
@@ -435,5 +484,6 @@ document.head.appendChild(style);
 // Torna funções acessíveis globalmente
 window.removerQuestao = removerQuestao;
 window.configurarBotoesSelecao = configurarBotoesSelecao;
+window.marcarBotoesJaSelecionados = marcarBotoesJaSelecionados;
 
 console.log('✅ Script carregado completamente');
