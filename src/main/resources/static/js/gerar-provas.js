@@ -256,25 +256,24 @@ function atualizarInterface() {
                 : questao.enunciado;
             
             html += `
-                <div class="card mb-2 questao-selecionada" style="animation: slideIn 0.3s ease-out;">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="flex-grow-1">
-                                <small class="text-muted d-block mb-1">
-                                    <strong>${disciplinaNome}</strong>
-                                </small>
-                                <small class="d-block" title="${questao.enunciado}">
-                                    <span class="badge bg-primary me-1">${index + 1}</span>
-                                    ${enunciadoCurto}
-                                </small>
-                            </div>
-                            <button type="button" 
-                                    class="btn btn-sm btn-outline-danger ms-2"
-                                    onclick="removerQuestao(${questao.id})"
-                                    title="Remover questão">
-                                <i class="bi bi-x-lg"></i>
-                            </button>
+                <div class="card mb-2" style="animation: slideIn 0.3s ease-out; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                    <div style="padding: 8px; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;">
+                        <div style="flex: 1; min-width: 0; overflow: hidden;">
+                            <small style="display: block; margin-bottom: 4px; font-weight: 600; color: #6a11cb;">
+                                ${disciplinaNome}
+                            </small>
+                            <small style="display: block; color: #495057;" title="${questao.enunciado}">
+                                <span class="badge bg-primary me-1">${index + 1}</span>
+                                ${enunciadoCurto}
+                            </small>
                         </div>
+                        <button type="button" 
+                                class="btn btn-sm btn-outline-danger"
+                                onclick="removerQuestao(${questao.id})"
+                                title="Remover questão"
+                                style="width: 32px; height: 32px; min-width: 32px; max-width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin: 0;">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
                     </div>
                 </div>
             `;
