@@ -40,19 +40,12 @@ public class ProvaController {
         this.disciplinaService = disciplinaService;
     }
     
+ // ADICIONE este método no ProvaController.java
+
     @GetMapping("/gerar-provas")
-    public String exibirPaginaGerarProvas() {
-        return "gerar-provas";
-    }
-
-
-    /**
-     * Página para criar nova prova
-     */
-    @GetMapping("/criar")
-    public String criarProva(Model model, 
-                            @RequestParam(required = false) Long disciplinaId,
-                            HttpSession session) {
+    public String exibirPaginaGerarProvas(Model model, 
+                                          @RequestParam(required = false) Long disciplinaId,
+                                          HttpSession session) {
         
         // Verifica se usuário está logado
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
@@ -72,8 +65,10 @@ public class ProvaController {
             model.addAttribute("disciplinaSelecionada", disciplinaId);
         }
         
-        return "criar-prova";
+        return "gerar-provas";
     }
+
+    // SUBSTITUA o método existente que só retorna "gerar-provas"
 
     /**
      * Página de configuração da prova (após selecionar questões)
