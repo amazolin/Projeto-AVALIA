@@ -1,9 +1,14 @@
 package com.example.controller;
 
+import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;           
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;             
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,13 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.dto.CriarProvaDTO;
+import com.example.model.Disciplina;
 import com.example.model.Prova;
 import com.example.model.Questao;
-import com.example.model.Disciplina;
 import com.example.model.Usuario;
+import com.example.service.DisciplinaService;
 import com.example.service.ProvaService;
 import com.example.service.QuestaoService;
-import com.example.service.DisciplinaService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -139,52 +145,103 @@ public class ProvaController {
      * API: Criar nova prova
      */
     @PostMapping("/api/criar")
-    public ResponseEntity<?> criarProvaAPI(@RequestBody Map<String, Object> dados, 
-                                          HttpSession session) {
+    public ResponseEntity<?> criarProva(@RequestBody CriarProvaDTO dto, HttpSession session) {
         try {
+            System.out.println("📥 Recebendo requisição para criar prova: " + dto.getTitulo());
+            
+            // Verifica autenticação
             Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
             if (usuarioLogado == null) {
-                return ResponseEntity.status(401).body("Usuário não autenticado");
+                return ResponseEntity.status(401)
+                    .body(Map.of("erro", "Usuário não autenticado"));
             }
             
-            // Extrai dados do JSON
-            String titulo = (String) dados.get("titulo");
-            String descricao = (String) dados.get("descricao");
-            @SuppressWarnings("unchecked")
-            List<Long> questoesIds = (List<Long>) dados.get("questoes");
-            
-            // Validações
-            if (titulo == null || titulo.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Título é obrigatório!");
+            // Validações básicas
+            if (dto.getTitulo() == null || dto.getTitulo().trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(Map.of("erro", "O título da prova é obrigatório!"));
             }
             
-            if (questoesIds == null || questoesIds.isEmpty()) {
-                return ResponseEntity.badRequest().body("Selecione pelo menos uma questão!");
+            if (dto.getQuestoes() == null || dto.getQuestoes().isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(Map.of("erro", "Selecione pelo menos uma questão!"));
             }
             
-            // Cria a prova
-            Prova novaProva = new Prova();
-            novaProva.setTitulo(titulo.trim());
-            novaProva.setDescricao(descricao != null ? descricao.trim() : "");
-            novaProva.setCriador(usuarioLogado);
+            // Cria a prova PASSANDO O USUÁRIO para o Service
+            Long provaId = provaService.criarProva(dto, usuarioLogado);
             
-            // Busca as questões selecionadas
-            List<Questao> questoes = questaoService.buscarPorIds(questoesIds);
-            novaProva.setQuestoes(questoes);
+            // Monta resposta
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", provaId);
+            response.put("titulo", dto.getTitulo());
+            response.put("mensagem", "Prova criada com sucesso!");
             
-            // Salva a prova
-            Prova provaSalva = provaService.salvar(novaProva);
-            
-            // Retorna resposta
-            Map<String, Object> resposta = new HashMap<>();
-            resposta.put("id", provaSalva.getId());
-            resposta.put("mensagem", "Prova criada com sucesso!");
-            
-            return ResponseEntity.ok(resposta);
+            System.out.println("✅ Prova criada com ID: " + provaId);
+            return ResponseEntity.ok(response);
             
         } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body("Erro ao criar prova: " + e.getMessage());
+            System.err.println("❌ Erro ao criar prova: " + e.getMessage());
+            e.printStackTrace();
+            
+            Map<String, String> erro = new HashMap<>();
+            erro.put("erro", "Erro ao criar prova: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+        }
+    }
+
+    // ==================== MÉTODO 2: GERAR PDF ====================
+
+    /**
+     * API: Gerar e baixar o PDF da prova
+     * ENDPOINT NOVO - adicione após os outros métodos da API
+     */
+    @GetMapping("/api/prova/{id}/pdf")
+    public ResponseEntity<?> gerarPDF(@PathVariable Long id, HttpSession session) {
+        try {
+            System.out.println("📄 Gerando PDF da prova ID: " + id);
+            
+            // Verifica autenticação
+            Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+            if (usuarioLogado == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuário não autenticado");
+            }
+            
+            // Verifica se a prova existe
+            Prova prova = provaService.buscarPorId(id);
+            if (prova == null) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            // Gera o PDF
+            byte[] pdf = provaService.gerarProvaPDF(id);
+            ByteArrayInputStream bis = new ByteArrayInputStream(pdf);
+
+            // Nome do arquivo personalizado (remove caracteres especiais)
+            String nomeArquivo = prova.getTitulo()
+                    .replaceAll("[^a-zA-Z0-9-_]", "_") // Remove caracteres especiais
+                    .replaceAll("_{2,}", "_")           // Remove underscores duplicados
+                    .substring(0, Math.min(50, prova.getTitulo().length())); // Limita a 50 chars
+            
+            // Configura o cabeçalho para download
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=" + nomeArquivo + ".pdf");
+
+            System.out.println("✅ PDF gerado com sucesso!");
+            
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(new InputStreamResource(bis));
+                    
+        } catch (Exception e) {
+            System.err.println("❌ Erro ao gerar PDF: " + e.getMessage());
+            e.printStackTrace();
+            
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao gerar PDF: " + e.getMessage());
         }
     }
 

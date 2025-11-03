@@ -420,7 +420,19 @@ async function confirmarCriarProva() {
         });
         
         // Mensagem de sucesso
-        mostrarToast(`Prova "${titulo}" criada com sucesso!`, 'success');
+        mostrarToast(`Prova "${titulo}" criada com sucesso! Baixando PDF...`, 'success');
+        
+        // ✅ BAIXA O PDF AUTOMATICAMENTE
+        console.log('📄 Iniciando download do PDF ID:', resultado.id);
+        setTimeout(() => {
+            const linkDownload = document.createElement('a');
+            linkDownload.href = `/api/prova/${resultado.id}/pdf`;
+            linkDownload.download = `prova_${resultado.id}.pdf`;
+            document.body.appendChild(linkDownload);
+            linkDownload.click();
+            document.body.removeChild(linkDownload);
+            console.log('✅ Download iniciado!');
+        }, 500);
         
     } catch (error) {
         console.error('❌ Erro ao criar prova:', error);

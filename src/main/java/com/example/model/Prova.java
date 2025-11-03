@@ -2,7 +2,6 @@ package com.example.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import jakarta.persistence.*;
 
 @Entity 
@@ -11,53 +10,41 @@ public class Prova {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_prova")
     private Long id;
     
-    @Column(name = "nome")
-    private String titulo;  // Mantive compatível com o controller
-    
-    @Column(columnDefinition = "TEXT")
-    private String descricao;
+    @Column(name = "nome_prova")
+    private String titulo;
     
     // Relacionamento com o criador da prova
     @ManyToOne
-    @JoinColumn(name = "criador_id")
+    @JoinColumn(name = "id_coordenador")
     private Usuario criador;
     
     // Relacionamento com as questões da prova
     @ManyToMany
     @JoinTable(
-        name = "prova_questoes",
-        joinColumns = @JoinColumn(name = "prova_id"),
-        inverseJoinColumns = @JoinColumn(name = "questao_id")
+        name = "provas_questoes",
+        joinColumns = @JoinColumn(name = "id_prova"),        // ✅ Corrigido
+        inverseJoinColumns = @JoinColumn(name = "id_questao") // ✅ Corrigido
     )
     private List<Questao> questoes;
     
-    @Column(name = "data_criacao")
+    @Column(name = "data_criacao", updatable = false)
     private LocalDateTime dataCriacao;
-    
-    @Column(name = "data_atualizacao")
-    private LocalDateTime dataAtualizacao;
     
     // Métodos automáticos para datas
     @PrePersist
     protected void onCreate() {
         dataCriacao = LocalDateTime.now();
-        dataAtualizacao = LocalDateTime.now();
-    }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        dataAtualizacao = LocalDateTime.now();
     }
     
     // Construtores
     public Prova() {
     }
     
-    public Prova(String titulo, String descricao) {
+    public Prova(String titulo) {
         this.titulo = titulo;
-        this.descricao = descricao;
     }
     
     // Getters e Setters
@@ -77,7 +64,7 @@ public class Prova {
         this.titulo = titulo;
     }
     
-    // Alias para compatibilidade (se você usar "nome" em algum lugar)
+    // Alias para compatibilidade
     public String getNome() {
         return titulo;
     }
@@ -86,12 +73,14 @@ public class Prova {
         this.titulo = nome;
     }
     
+    // Método getDescricao para compatibilidade (retorna string vazia)
     public String getDescricao() {
-        return descricao;
+        return "";
     }
     
+    // Método setDescricao para compatibilidade (não faz nada)
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+        // Ignora - não usa descrição
     }
     
     public Usuario getCriador() {
@@ -118,11 +107,12 @@ public class Prova {
         this.dataCriacao = dataCriacao;
     }
     
+    // Método getDataAtualizacao para compatibilidade (retorna data_criacao)
     public LocalDateTime getDataAtualizacao() {
-        return dataAtualizacao;
+        return dataCriacao;
     }
     
     public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
+        // Ignora
     }
 }
