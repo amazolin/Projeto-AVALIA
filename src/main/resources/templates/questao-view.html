@@ -76,7 +76,7 @@
                 </span>
             </div>
             <div class="btn-group">
-                <a th:href="@{/banco-questoes}" class="btn btn-outline-secondary">
+                <a th:href="${urlVoltar != null ? urlVoltar : '/banco-questoes'}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left"></i> Voltar
                 </a>
                 <!-- Botão Editar: apenas criador ou coordenador -->

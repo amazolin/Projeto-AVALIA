@@ -115,7 +115,7 @@
 										th:data-disciplina="${q.disciplina != null ? q.disciplina.nome : 'Sem disciplina'}">
 										<i class="bi bi-plus-circle"></i> Selecionar
 									</button>
-									<a th:href="@{/questoes/ver/{id}(id=${q.id})}"
+									<a th:href="@{/questoes/ver/{id}(id=${q.id}, origem='gerar-provas', disciplinaId=${disciplinaSelecionada})}"
 										class="btn btn-sm btn-info text-white"> <i
 										class="bi bi-eye"></i> Visualizar
 									</a>

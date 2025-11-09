@@ -263,7 +263,10 @@ public class QuestaoController {
     }
 
     @GetMapping("/questoes/ver/{id}")
-    public String verQuestao(@PathVariable Long id, Model model, HttpSession session) {
+    public String verQuestao(@PathVariable Long id, 
+                            @RequestParam(value = "origem", required = false) String origem,
+                            @RequestParam(value = "disciplinaId", required = false) Long disciplinaId,
+                            Model model, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
@@ -272,9 +275,21 @@ public class QuestaoController {
         com.example.model.Questao q = questaoService.buscarPorId(id);
         if (q == null) return "redirect:/banco-questoes";
         
+        // Determina para onde o botão "Voltar" deve levar
+        String urlVoltar = "/banco-questoes";
+        if ("gerar-provas".equals(origem)) {
+            urlVoltar = "/gerar-provas";
+            if (disciplinaId != null) {
+                urlVoltar += "?disciplinaId=" + disciplinaId;
+            }
+        } else if (disciplinaId != null) {
+            urlVoltar += "?disciplinaId=" + disciplinaId;
+        }
+        
         model.addAttribute("questao", q);
         model.addAttribute("opcoes", opcaoQuestaoService.buscarPorQuestaoId(id));
         model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("urlVoltar", urlVoltar);
         return "questao-view";
     }
 }
