@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.model.Usuario;
 import com.example.model.Disciplina;
+import com.example.model.Questao;
 import com.example.model.TipoUsuario;
 import com.example.service.UsuarioService;
+import com.example.service.DisciplinaService;
+import com.example.service.QuestaoService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -27,9 +30,15 @@ import jakarta.servlet.http.HttpSession;
 public class ControladorAvalia {
 
 	private final UsuarioService usuarioService;
+	private final DisciplinaService disciplinaService;
+	private final QuestaoService questaoService;
 
-	public ControladorAvalia(UsuarioService usuarioService) {
+	public ControladorAvalia(UsuarioService usuarioService,
+	                        DisciplinaService disciplinaService,
+	                        QuestaoService questaoService) {
 		this.usuarioService = usuarioService;
+		this.disciplinaService = disciplinaService;
+		this.questaoService = questaoService;
 	}
 
 	// ✅ Torna o usuário logado acessível a todas as páginas Thymeleaf
@@ -59,6 +68,59 @@ public class ControladorAvalia {
 	public String cadastro(Model model) {
 		model.addAttribute("usuario", new Usuario());
 		return "cadastro";
+	}
+	
+	@GetMapping("/gerar-provas")
+	public String redirecionarGerarProvas() {
+	    return "redirect:/provas/gerar";
+	}
+
+	/**
+	 * 🆕 Página do Banco de Questões com filtro de disciplinas
+	 */
+	@GetMapping("/banco-questoes")
+	public String bancoQuestoes(Model model, 
+	                           @RequestParam(required = false) Long disciplinaId,
+	                           HttpSession session) {
+	    
+	    // Verifica se usuário está logado
+	    Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+	    if (usuarioLogado == null) {
+	        return "redirect:/login";
+	    }
+	    
+	    List<Disciplina> disciplinas;
+	    
+	    // 🔒 FILTRA DISCIPLINAS: coordenador vê todas, professor vê apenas as suas
+	    if (usuarioLogado.getTipoUsuario() != null && usuarioLogado.getTipoUsuario().getId() == 1) {
+	        // Coordenador: todas as disciplinas
+	        disciplinas = disciplinaService.buscarTodas();
+	    } else {
+	        // Professor: apenas suas disciplinas
+	        disciplinas = disciplinaService.buscarPorProfessor(usuarioLogado.getId());
+	    }
+	    
+	    model.addAttribute("listaDisciplinas", disciplinas);
+	    model.addAttribute("usuarioLogado", usuarioLogado);
+	    
+	    // Se uma disciplina foi selecionada, busca suas questões
+	    if (disciplinaId != null) {
+	        // 🔒 VALIDA: professor só pode acessar disciplinas que leciona
+	        boolean temAcesso = disciplinas.stream()
+	                .anyMatch(d -> d.getId().equals(disciplinaId));
+	        
+	        if (!temAcesso && usuarioLogado.getTipoUsuario().getId() != 1) {
+	            // Professor tentando acessar disciplina que não leciona
+	            model.addAttribute("erro", "Você não tem acesso a esta disciplina!");
+	            return "banco-questoes";
+	        }
+	        
+	        List<Questao> questoes = questaoService.buscarPorDisciplina(disciplinaId);
+	        model.addAttribute("questoes", questoes);
+	        model.addAttribute("disciplinaSelecionada", disciplinaId);
+	    }
+	    
+	    return "banco-questoes";
 	}
 
 	// --- LISTAR USUÁRIOS (apenas coordenador) ---

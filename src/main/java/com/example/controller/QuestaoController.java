@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.model.Usuario;
 import com.example.service.DisciplinaService;
@@ -28,23 +27,27 @@ public class QuestaoController {
     @Autowired
     private OpcaoQuestaoService opcaoQuestaoService;
 
-
+    /**
+     * Exibe o formulário de cadastro de questões
+     */
     @GetMapping("/questoes") 
     public String exibirCadastroQuestao(Model model, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
         }
-        
-        // Carrega a lista do BD e a insere no Model 
-        model.addAttribute("listaDisciplinas", disciplinaService.findAll());
+
+        // ✅ Agora usa o método inteligente que mostra apenas as disciplinas do professor
+        model.addAttribute("listaDisciplinas", disciplinaService.findAllByUsuario(usuarioLogado));
         model.addAttribute("usuarioLogado", usuarioLogado);
         
-        // Retorna o template questoes.html
         return "questoes"; 
     }
 
-    @GetMapping("/banco-questoes")
+    /**
+     * Mostra o banco de questões, filtrando por disciplina (se houver)
+     */
+    @GetMapping("/questoes/banco")
     public String mostrarBancoDeQuestoes(@RequestParam(required = false) Long disciplinaId, 
                                          Model model, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
@@ -52,11 +55,11 @@ public class QuestaoController {
             return "redirect:/login";
         }
         
-        model.addAttribute("listaDisciplinas", disciplinaService.findAll());
+        // ✅ Também usa o novo método de regra automática
+        model.addAttribute("listaDisciplinas", disciplinaService.findAllByUsuario(usuarioLogado));
         model.addAttribute("usuarioLogado", usuarioLogado);
 
         if (disciplinaId != null) {
-            // Filtro das questões puxando por disciplina
             model.addAttribute("questoes", disciplinaService.buscarQuestoesPorDisciplina(disciplinaId));
             model.addAttribute("disciplinaSelecionada", disciplinaId);
         } else {
@@ -66,6 +69,9 @@ public class QuestaoController {
         return "banco-questoes";
     }
 
+    /**
+     * Salva uma nova questão (com alternativas)
+     */
     @PostMapping("/questoes/salvar")
     public String salvarQuestao(
             @RequestParam Long disciplinaId,
@@ -85,10 +91,10 @@ public class QuestaoController {
         q.setDisciplina(d);
         q.setEnunciado(enunciado);
         q.setTipoQuestao(com.example.model.Questao.TipoQuestao.valueOf(tipoQuestao));
-        q.setCriador(usuarioLogado); // Define o criador
+        q.setCriador(usuarioLogado);
         com.example.model.Questao saved = questaoService.salvarQuestao(q);
 
-        // Validação pelo tipo de questão
+        // ✅ Criação das alternativas
         if ("verdadeiro_falso".equals(tipoQuestao)) {
             String[] textos = {"Verdadeiro", "Falso"};
             String[] letras = {"a", "b"};
@@ -107,15 +113,11 @@ public class QuestaoController {
                 opcaoQuestaoService.salvarOpcao(op);
             }
         } else {
-            // Para múltipla escolha, usa as alternativas informadas
             if (alternativaText != null) {
                 String[] letras = {"a", "b", "c", "d", "e"};
                 for (int i = 0; i < alternativaText.size() && i < letras.length; i++) {
                     String texto = alternativaText.get(i);
-                    // Pula alternativas vazias
-                    if (texto == null || texto.trim().isEmpty()) {
-                        continue;
-                    }
+                    if (texto == null || texto.trim().isEmpty()) continue;
                     boolean correta = false;
                     if (alternativaCorreta != null && !alternativaCorreta.isEmpty()) {
                         char c = alternativaCorreta.charAt(0);
@@ -124,7 +126,7 @@ public class QuestaoController {
                     }
                     com.example.model.OpcaoQuestao op = new com.example.model.OpcaoQuestao();
                     op.setTexto(texto);
-                    op.setLetra(letras[i]); // Define a letra baseada no índice
+                    op.setLetra(letras[i]);
                     op.setCorreta(correta);
                     op.setQuestao(saved);
                     opcaoQuestaoService.salvarOpcao(op);
@@ -132,150 +134,28 @@ public class QuestaoController {
             }
         }
 
-        return "redirect:/banco-questoes?disciplinaId=" + disciplinaId;
+        return "redirect:/questoes/banco?disciplinaId=" + disciplinaId;
     }
-
-    @GetMapping("/questoes/editar/{id}")
-    public String editarQuestaoForm(@PathVariable Long id, Model model, 
-                                   HttpSession session, RedirectAttributes redirectAttributes) {
-        Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
-        if (usuarioLogado == null) {
-            return "redirect:/login";
-        }
-        
-        com.example.model.Questao q = questaoService.buscarPorId(id);
-        if (q == null) {
-            return "redirect:/banco-questoes";
-        }
-        
-        // Verifica permissões: apenas o criador ou coordenador podem editar
-        boolean ehCoordenador = usuarioLogado.getTipoUsuario() != null && 
-                                usuarioLogado.getTipoUsuario().getId() == 1;
-        boolean ehCriador = q.getCriador() != null && 
-                           q.getCriador().getId().equals(usuarioLogado.getId());
-        
-        if (!ehCoordenador && !ehCriador) {
-            redirectAttributes.addFlashAttribute("erro", "Você não tem permissão para editar esta questão.");
-            return "redirect:/banco-questoes?disciplinaId=" + q.getDisciplina().getId();
-        }
-        
-        model.addAttribute("questao", q);
-        model.addAttribute("listaDisciplinas", disciplinaService.findAll());
-        model.addAttribute("opcoes", opcaoQuestaoService.buscarPorQuestaoId(id));
-        model.addAttribute("usuarioLogado", usuarioLogado);
-        return "questoes";
-    }
-
-    @PostMapping("/questoes/editar/{id}")
-    public String editarQuestaoSalvar(@PathVariable Long id,
-                                      @RequestParam Long disciplinaId,
-                                      @RequestParam String enunciado,
-                                      @RequestParam(name = "alternativaText", required = false) java.util.List<String> alternativaText,
-                                      @RequestParam(name = "alternativaCorreta", required = false) String alternativaCorreta,
-                                      HttpSession session,
-                                      RedirectAttributes redirectAttributes) {
-        Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
-        if (usuarioLogado == null) {
-            return "redirect:/login";
-        }
-        
-        com.example.model.Questao q = questaoService.buscarPorId(id);
-        if (q == null) {
-            return "redirect:/banco-questoes";
-        }
-        
-        // Verifica permissões
-        boolean ehCoordenador = usuarioLogado.getTipoUsuario() != null && 
-                                usuarioLogado.getTipoUsuario().getId() == 1;
-        boolean ehCriador = q.getCriador() != null && 
-                           q.getCriador().getId().equals(usuarioLogado.getId());
-        
-        if (!ehCoordenador && !ehCriador) {
-            redirectAttributes.addFlashAttribute("erro", "Você não tem permissão para editar esta questão.");
-            return "redirect:/banco-questoes?disciplinaId=" + disciplinaId;
-        }
-        
-        com.example.model.Disciplina d = disciplinaService.buscarPorId(disciplinaId);
-        q.setDisciplina(d);
-        q.setEnunciado(enunciado);
-        questaoService.salvarQuestao(q);
-
-        opcaoQuestaoService.apagarPorQuestaoId(id);
-        if (alternativaText != null) {
-            String[] letras = {"a", "b", "c", "d", "e"};
-            for (int i = 0; i < alternativaText.size() && i < letras.length; i++) {
-                String texto = alternativaText.get(i);
-                // Pula alternativas vazias (permite questões V/F com só 2 opções)
-                if (texto == null || texto.trim().isEmpty()) {
-                    continue;
-                }
-                boolean correta = false;
-                if (alternativaCorreta != null && !alternativaCorreta.isEmpty()) {
-                    char c = alternativaCorreta.charAt(0);
-                    int idx = c - 'A';
-                    correta = (idx == i);
-                }
-                com.example.model.OpcaoQuestao op = new com.example.model.OpcaoQuestao();
-                op.setTexto(texto);
-                op.setLetra(letras[i]); // Define a letra baseada no índice
-                op.setCorreta(correta);
-                op.setQuestao(q);
-                opcaoQuestaoService.salvarOpcao(op);
-            }
-        }
-
-        return "redirect:/banco-questoes?disciplinaId=" + disciplinaId;
-    }
-
-    @PostMapping("/questoes/excluir/{id}")
-    public String excluirQuestao(@PathVariable Long id, HttpSession session,
-                                RedirectAttributes redirectAttributes) {
-        Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
-        if (usuarioLogado == null) {
-            return "redirect:/login";
-        }
-        
-        com.example.model.Questao q = questaoService.buscarPorId(id);
-        Long disciplinaId = null;
-        if (q != null && q.getDisciplina() != null) {
-            disciplinaId = q.getDisciplina().getId();
-        }
-        
-        // Apenas coordenador pode excluir
-        boolean ehCoordenador = usuarioLogado.getTipoUsuario() != null && 
-                                usuarioLogado.getTipoUsuario().getId() == 1;
-        
-        if (!ehCoordenador) {
-            redirectAttributes.addFlashAttribute("erro", "Apenas o coordenador pode remover questões.");
-            if (disciplinaId != null) {
-                return "redirect:/banco-questoes?disciplinaId=" + disciplinaId;
-            }
-            return "redirect:/banco-questoes";
-        }
-        
-        opcaoQuestaoService.apagarPorQuestaoId(id);
-        questaoService.apagarPorId(id);
-        
-        if (disciplinaId != null) {
-            return "redirect:/banco-questoes?disciplinaId=" + disciplinaId;
-        }
-        return "redirect:/banco-questoes";
-    }
-
+    
     @GetMapping("/questoes/ver/{id}")
-    public String verQuestao(@PathVariable Long id, 
-                            @RequestParam(value = "origem", required = false) String origem,
-                            @RequestParam(value = "disciplinaId", required = false) Long disciplinaId,
-                            Model model, HttpSession session) {
+    public String verQuestao(
+            @PathVariable Long id, 
+            @RequestParam(value = "origem", required = false) String origem,
+            @RequestParam(value = "disciplinaId", required = false) Long disciplinaId,
+            Model model, 
+            HttpSession session) {
+        
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
         }
-        
+
         com.example.model.Questao q = questaoService.buscarPorId(id);
-        if (q == null) return "redirect:/banco-questoes";
-        
-        // Determina para onde o botão "Voltar" deve levar
+        if (q == null) {
+            return "redirect:/banco-questoes";
+        }
+
+        // 🔙 Define o destino do botão "Voltar"
         String urlVoltar = "/banco-questoes";
         if ("gerar-provas".equals(origem)) {
             urlVoltar = "/gerar-provas";
@@ -285,11 +165,14 @@ public class QuestaoController {
         } else if (disciplinaId != null) {
             urlVoltar += "?disciplinaId=" + disciplinaId;
         }
-        
+
         model.addAttribute("questao", q);
         model.addAttribute("opcoes", opcaoQuestaoService.buscarPorQuestaoId(id));
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("urlVoltar", urlVoltar);
+
         return "questao-view";
     }
+
+    
 }

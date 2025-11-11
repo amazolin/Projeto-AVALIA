@@ -63,7 +63,7 @@
 				<div class="card p-4">
 					<!-- Filtro de Disciplinas -->
 					<form method="get" class="row g-3 align-items-center mb-4"
-						th:action="@{/gerar-provas}">
+						th:action="@{/provas/gerar}">
 						<div class="col-auto">
 							<label for="disciplina" class="col-form-label">Matéria</label>
 						</div>
@@ -115,7 +115,8 @@
 										th:data-disciplina="${q.disciplina != null ? q.disciplina.nome : 'Sem disciplina'}">
 										<i class="bi bi-plus-circle"></i> Selecionar
 									</button>
-									<a th:href="@{/questoes/ver/{id}(id=${q.id}, origem='gerar-provas', disciplinaId=${disciplinaSelecionada})}"
+									<a
+										th:href="@{/questoes/ver/{id}(id=${q.id}, origem='gerar-provas', disciplinaId=${disciplinaSelecionada})}"
 										class="btn btn-sm btn-info text-white"> <i
 										class="bi bi-eye"></i> Visualizar
 									</a>
