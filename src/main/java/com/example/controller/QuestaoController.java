@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.model.Usuario;
 import com.example.service.DisciplinaService;
@@ -15,11 +16,11 @@ import com.example.service.QuestaoService;
 
 import jakarta.servlet.http.HttpSession;
 
-@Controller 
+@Controller
 public class QuestaoController {
 
     @Autowired
-    private DisciplinaService disciplinaService; 
+    private DisciplinaService disciplinaService;
 
     @Autowired
     private QuestaoService questaoService;
@@ -30,32 +31,30 @@ public class QuestaoController {
     /**
      * Exibe o formulário de cadastro de questões
      */
-    @GetMapping("/questoes") 
+    @GetMapping("/questoes")
     public String exibirCadastroQuestao(Model model, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
         }
 
-        // ✅ Agora usa o método inteligente que mostra apenas as disciplinas do professor
         model.addAttribute("listaDisciplinas", disciplinaService.findAllByUsuario(usuarioLogado));
         model.addAttribute("usuarioLogado", usuarioLogado);
-        
-        return "questoes"; 
+
+        return "questoes";
     }
 
     /**
      * Mostra o banco de questões, filtrando por disciplina (se houver)
      */
     @GetMapping("/questoes/banco")
-    public String mostrarBancoDeQuestoes(@RequestParam(required = false) Long disciplinaId, 
+    public String mostrarBancoDeQuestoes(@RequestParam(required = false) Long disciplinaId,
                                          Model model, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
         }
-        
-        // ✅ Também usa o novo método de regra automática
+
         model.addAttribute("listaDisciplinas", disciplinaService.findAllByUsuario(usuarioLogado));
         model.addAttribute("usuarioLogado", usuarioLogado);
 
@@ -85,7 +84,7 @@ public class QuestaoController {
         if (usuarioLogado == null) {
             return "redirect:/login";
         }
-        
+
         com.example.model.Questao q = new com.example.model.Questao();
         com.example.model.Disciplina d = disciplinaService.buscarPorId(disciplinaId);
         q.setDisciplina(d);
@@ -94,7 +93,7 @@ public class QuestaoController {
         q.setCriador(usuarioLogado);
         com.example.model.Questao saved = questaoService.salvarQuestao(q);
 
-        // ✅ Criação das alternativas
+        // Criação das alternativas
         if ("verdadeiro_falso".equals(tipoQuestao)) {
             String[] textos = {"Verdadeiro", "Falso"};
             String[] letras = {"a", "b"};
@@ -136,15 +135,18 @@ public class QuestaoController {
 
         return "redirect:/questoes/banco?disciplinaId=" + disciplinaId;
     }
-    
+
+    /**
+     * Exibe a tela de visualização da questão
+     */
     @GetMapping("/questoes/ver/{id}")
     public String verQuestao(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @RequestParam(value = "origem", required = false) String origem,
             @RequestParam(value = "disciplinaId", required = false) Long disciplinaId,
-            Model model, 
+            Model model,
             HttpSession session) {
-        
+
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
@@ -155,7 +157,6 @@ public class QuestaoController {
             return "redirect:/banco-questoes";
         }
 
-        // 🔙 Define o destino do botão "Voltar"
         String urlVoltar = "/banco-questoes";
         if ("gerar-provas".equals(origem)) {
             urlVoltar = "/gerar-provas";
@@ -174,5 +175,98 @@ public class QuestaoController {
         return "questao-view";
     }
 
-    
+    /**
+     * Exibe o formulário de edição de questão
+     */
+    @GetMapping("/questoes/editar/{id}")
+    public String editarQuestaoForm(@PathVariable Long id, Model model,
+                                    HttpSession session, RedirectAttributes redirectAttributes) {
+        Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+        if (usuarioLogado == null) {
+            return "redirect:/login";
+        }
+
+        com.example.model.Questao q = questaoService.buscarPorId(id);
+        if (q == null) {
+            return "redirect:/banco-questoes";
+        }
+
+        boolean ehCoordenador = usuarioLogado.getTipoUsuario() != null &&
+                usuarioLogado.getTipoUsuario().getId() == 1;
+        boolean ehCriador = q.getCriador() != null &&
+                q.getCriador().getId().equals(usuarioLogado.getId());
+
+        if (!ehCoordenador && !ehCriador) {
+            redirectAttributes.addFlashAttribute("erro", "Você não tem permissão para editar esta questão.");
+            return "redirect:/banco-questoes?disciplinaId=" + q.getDisciplina().getId();
+        }
+
+        model.addAttribute("questao", q);
+        model.addAttribute("listaDisciplinas", disciplinaService.findAllByUsuario(usuarioLogado));
+        model.addAttribute("opcoes", opcaoQuestaoService.buscarPorQuestaoId(id));
+        model.addAttribute("usuarioLogado", usuarioLogado);
+
+        return "questoes";
+    }
+
+    /**
+     * Salva as alterações da questão editada
+     */
+    @PostMapping("/questoes/editar/{id}")
+    public String editarQuestaoSalvar(@PathVariable Long id,
+                                      @RequestParam Long disciplinaId,
+                                      @RequestParam String enunciado,
+                                      @RequestParam(name = "alternativaText", required = false) java.util.List<String> alternativaText,
+                                      @RequestParam(name = "alternativaCorreta", required = false) String alternativaCorreta,
+                                      HttpSession session,
+                                      RedirectAttributes redirectAttributes) {
+        Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+        if (usuarioLogado == null) {
+            return "redirect:/login";
+        }
+
+        com.example.model.Questao q = questaoService.buscarPorId(id);
+        if (q == null) {
+            return "redirect:/banco-questoes";
+        }
+
+        boolean ehCoordenador = usuarioLogado.getTipoUsuario() != null &&
+                usuarioLogado.getTipoUsuario().getId() == 1;
+        boolean ehCriador = q.getCriador() != null &&
+                q.getCriador().getId().equals(usuarioLogado.getId());
+
+        if (!ehCoordenador && !ehCriador) {
+            redirectAttributes.addFlashAttribute("erro", "Você não tem permissão para editar esta questão.");
+            return "redirect:/banco-questoes?disciplinaId=" + disciplinaId;
+        }
+
+        com.example.model.Disciplina d = disciplinaService.buscarPorId(disciplinaId);
+        q.setDisciplina(d);
+        q.setEnunciado(enunciado);
+        questaoService.salvarQuestao(q);
+
+        opcaoQuestaoService.apagarPorQuestaoId(id);
+        if (alternativaText != null) {
+            String[] letras = {"a", "b", "c", "d", "e"};
+            for (int i = 0; i < alternativaText.size() && i < letras.length; i++) {
+                String texto = alternativaText.get(i);
+                if (texto == null || texto.trim().isEmpty()) continue;
+
+                boolean correta = false;
+                if (alternativaCorreta != null && !alternativaCorreta.isEmpty()) {
+                    char c = alternativaCorreta.charAt(0);
+                    int idx = c - 'A';
+                    correta = (idx == i);
+                }
+                com.example.model.OpcaoQuestao op = new com.example.model.OpcaoQuestao();
+                op.setTexto(texto);
+                op.setLetra(letras[i]);
+                op.setCorreta(correta);
+                op.setQuestao(q);
+                opcaoQuestaoService.salvarOpcao(op);
+            }
+        }
+
+        return "redirect:/banco-questoes?disciplinaId=" + disciplinaId;
+    }
 }

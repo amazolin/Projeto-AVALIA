@@ -152,12 +152,18 @@ public class ProvaController {
             if (dto.getQuestoes() == null || dto.getQuestoes().isEmpty())
                 return ResponseEntity.badRequest().body(Map.of("erro", "Selecione pelo menos uma questão"));
 
+            // Chama o service para criar a prova e gerar o PDF
             Long provaId = provaService.criarProva(dto, usuarioLogado);
+
+            // 🔹 Gera o nome do arquivo PDF, conforme padrão do seu service
+            String nomeArquivo = "prova_" + provaId + ".pdf";
+            String caminhoArquivo = "/pdfs/" + nomeArquivo; // pasta pública
 
             return ResponseEntity.ok(Map.of(
                     "id", provaId,
                     "titulo", dto.getTitulo(),
-                    "mensagem", "Prova criada com sucesso!"
+                    "mensagem", "Prova criada com sucesso!",
+                    "arquivo", caminhoArquivo  // 🔹 Adiciona o link do PDF
             ));
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
