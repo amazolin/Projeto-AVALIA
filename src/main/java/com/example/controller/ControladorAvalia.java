@@ -55,13 +55,28 @@ public class ControladorAvalia {
 	}
 
 	@GetMapping("/coordenador")
-	public String coordenador() {
-		return "coordenador";
+	public String coordenador(Model model, HttpSession session) {
+		Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+		if (usuarioLogado == null || usuarioLogado.getTipoUsuario() == null) {
+			return "redirect:/login";
+		} else if (usuarioLogado.getTipoUsuario().getId() != 1) {
+			return "redirect:/professor";
+		} else{
+			return "coordenador";
+		}
+		
 	}
 
 	@GetMapping("/professor")
-	public String professor() {
-		return "professor";
+	public String professor(Model model, HttpSession session) {
+		Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+		if (usuarioLogado == null || usuarioLogado.getTipoUsuario() == null) {
+			return "redirect:/login";
+		} else if (usuarioLogado.getTipoUsuario().getId() != 2) {
+			return "redirect:/coordenador";
+		}else{
+			return "professor";
+		}
 	}
 
 	@GetMapping("/cadastro")
