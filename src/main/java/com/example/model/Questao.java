@@ -1,29 +1,20 @@
 package com.example.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity 
 @Table(name = "questoes") 
 public class Questao {
-
     public enum TipoQuestao {
         multipla_escolha, verdadeiro_falso
     }
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_questao")
     private Long id;
-
+    
     @Column(name = "texto_questao")
     private String enunciado; 
     
@@ -38,34 +29,39 @@ public class Questao {
     @ManyToOne
     @JoinColumn(name = "id_criador")
     private Usuario criador;
+    
+    // ✅ ADICIONE ESTE RELACIONAMENTO
+    @OneToMany(mappedBy = "questao", fetch = FetchType.EAGER)
+    @OrderBy("letra ASC")
+    private List<OpcaoQuestao> opcoes;
    
     public Questao() {
     }
-
+    
     public Questao(String enunciado) {
         this.enunciado = enunciado;
     }
-
+    
     public Long getId() {
         return id;
     }
-
+    
     public void setId(Long id) {
         this.id = id;
     }
-
+    
     public String getEnunciado() {
         return enunciado;
     }
-
+    
     public void setEnunciado(String enunciado) {
         this.enunciado = enunciado;
     }
-
+    
     public Disciplina getDisciplina() {
         return disciplina;
     }
-
+    
     public void setDisciplina(Disciplina disciplina) {
         this.disciplina = disciplina;
     }
@@ -73,7 +69,7 @@ public class Questao {
     public Usuario getCriador() {
         return criador;
     }
-
+    
     public void setCriador(Usuario criador) {
         this.criador = criador;
     }
@@ -81,8 +77,17 @@ public class Questao {
     public TipoQuestao getTipoQuestao() {
         return tipoQuestao;
     }
-
+    
     public void setTipoQuestao(TipoQuestao tipoQuestao) {
         this.tipoQuestao = tipoQuestao;
+    }
+    
+    // ✅ GETTER E SETTER PARA AS OPÇÕES
+    public List<OpcaoQuestao> getOpcoes() {
+        return opcoes;
+    }
+    
+    public void setOpcoes(List<OpcaoQuestao> opcoes) {
+        this.opcoes = opcoes;
     }
 }
