@@ -30,8 +30,9 @@
 					<li class="nav-item"><a class="nav-link active"
 						href="/banco-questoes"><i
 							class="bi bi-patch-question-fill me-1"></i> Gerenciar Questões</a></li>
-					<li class="nav-item"><a class="nav-link" href="gerar-provas"><i
-							class="bi bi-file-earmark-text-fill me-1"></i> Gerar Provas</a></li>
+					<li class="nav-item"><a class="nav-link" href="/gerar-provas">
+							<i class="bi bi-file-earmark-text-fill me-1"></i> Gerar Provas
+					</a></li>
 					<li class="nav-item"
 						th:if="${usuarioLogado != null and usuarioLogado.tipoUsuario.id == 1}">
 						<a class="nav-link" href="/usuarios"> <i
@@ -103,7 +104,8 @@
 						th:text="${q.criador != null ? q.criador.nome : 'Desconhecido'}"></span>
 					</small>
 					<div class="mt-2">
-						<a th:href="@{/questoes/ver/{id}(id=${q.id}, origem='banco-questoes', disciplinaId=${disciplinaSelecionada})}"
+						<a
+							th:href="@{/questoes/ver/{id}(id=${q.id}, origem='banco-questoes', disciplinaId=${disciplinaSelecionada})}"
 							class="btn btn-sm btn-info text-white me-2"> <i
 							class="bi bi-eye"></i> Visualizar
 						</a>

@@ -171,7 +171,10 @@ public class ProvaController {
         }
     }
 
-    @GetMapping("/api/{id}/pdf")
+    @GetMapping(
+            value = "/api/{id}/pdf",
+            produces = MediaType.APPLICATION_PDF_VALUE
+    )
     public ResponseEntity<?> gerarPDF(@PathVariable Long id, HttpSession session) {
         try {
             Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
@@ -182,23 +185,32 @@ public class ProvaController {
             if (prova == null) return ResponseEntity.notFound().build();
 
             byte[] pdf = provaService.gerarProvaPDF(id);
+
+            // Garante nome seguro
             String nomeArquivo = prova.getTitulo()
                     .replaceAll("[^a-zA-Z0-9-_]", "_")
-                    .replaceAll("_{2,}", "_")
-                    .substring(0, Math.min(50, prova.getTitulo().length()));
+                    .replaceAll("_{2,}", "_");
+
+            if (nomeArquivo.length() > 60) {
+                nomeArquivo = nomeArquivo.substring(0, 60);
+            }
 
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition", "attachment; filename=" + nomeArquivo + ".pdf");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=" + nomeArquivo + ".pdf");
 
             return ResponseEntity.ok()
                     .headers(headers)
                     .contentType(MediaType.APPLICATION_PDF)
-                    .body(new InputStreamResource(new ByteArrayInputStream(pdf)));
+                    .body(pdf);   // <- ENVIA DIRETO O BYTE[] !!
+
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError()
                     .body("Erro ao gerar PDF: " + e.getMessage());
         }
     }
+
 
     @PostMapping("/api/editar/{id}")
     public ResponseEntity<?> editarProva(@PathVariable Long id,
