@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     carregarQuestoesSalvas();
     atualizarInterface();
     inicializarBotoes();
+    limparQuestoesDoStorage();
 });
 
 function inicializarBotoes() {
