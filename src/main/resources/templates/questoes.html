@@ -172,10 +172,13 @@
                 </div>
 
                 <!-- IMAGEM -->
-                <div th:if="${questao.imagem != null}" style="max-width: 400px; width: 100%; height: auto; border-radius: 8px;">
+                <div th:if="${questao.imagem != null}"
+                    style="max-width: 400px; width: 100%; margin: 0 auto; text-align: center;">
                     <p><b>Imagem atual:</b></p>
-                    <img th:src="@{'/uploads/questoes/' + ${questao.imagem}}" class="img-fluid mt-2">
+                    <img th:src="@{'/uploads/questoes/' + ${questao.imagem}}" class="img-fluid mt-2"
+                        style="max-width: 400px; border-radius: 8px;">
                 </div>
+
 
                 <div class="mb-4">
                     <label for="imagem" class="form-label">Alterar Imagem</label>

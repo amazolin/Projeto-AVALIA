@@ -116,9 +116,12 @@
                 </div>
             </div>
 
-            <div th:if="${questao.imagem != null}" style="max-width: 400px; width: 100%; height: auto; border-radius: 8px;">
-                <img th:src="@{'/uploads/questoes/' + ${questao.imagem}}" class="img-fluid mt-2">
+            <!-- Imagem da questão -->
+            <div th:if="${questao.imagem != null}" class="text-center">
+                <img th:src="@{'/uploads/questoes/' + ${questao.imagem}}" class="img-fluid mt-2"
+                    style="max-width: 400px; border-radius: 8px;">
             </div>
+
 
 
             <!-- Alternativas -->
