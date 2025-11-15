@@ -49,7 +49,7 @@ public class QuestaoController {
      */
     @GetMapping("/questoes/banco")
     public String mostrarBancoDeQuestoes(@RequestParam(required = false) Long disciplinaId,
-                                         Model model, HttpSession session) {
+            Model model, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
@@ -78,8 +78,7 @@ public class QuestaoController {
             @RequestParam String tipoQuestao,
             @RequestParam(name = "alternativaText", required = false) java.util.List<String> alternativaText,
             @RequestParam(name = "alternativaCorreta", required = false) String alternativaCorreta,
-            HttpSession session
-    ) {
+            HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
@@ -95,8 +94,8 @@ public class QuestaoController {
 
         // Criação das alternativas
         if ("verdadeiro_falso".equals(tipoQuestao)) {
-            String[] textos = {"Verdadeiro", "Falso"};
-            String[] letras = {"a", "b"};
+            String[] textos = { "Verdadeiro", "Falso" };
+            String[] letras = { "a", "b" };
             for (int i = 0; i < 2; i++) {
                 boolean correta = false;
                 if (alternativaCorreta != null && !alternativaCorreta.isEmpty()) {
@@ -113,10 +112,11 @@ public class QuestaoController {
             }
         } else {
             if (alternativaText != null) {
-                String[] letras = {"a", "b", "c", "d", "e"};
+                String[] letras = { "a", "b", "c", "d", "e" };
                 for (int i = 0; i < alternativaText.size() && i < letras.length; i++) {
                     String texto = alternativaText.get(i);
-                    if (texto == null || texto.trim().isEmpty()) continue;
+                    if (texto == null || texto.trim().isEmpty())
+                        continue;
                     boolean correta = false;
                     if (alternativaCorreta != null && !alternativaCorreta.isEmpty()) {
                         char c = alternativaCorreta.charAt(0);
@@ -180,7 +180,7 @@ public class QuestaoController {
      */
     @GetMapping("/questoes/editar/{id}")
     public String editarQuestaoForm(@PathVariable Long id, Model model,
-                                    HttpSession session, RedirectAttributes redirectAttributes) {
+            HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
@@ -214,12 +214,12 @@ public class QuestaoController {
      */
     @PostMapping("/questoes/editar/{id}")
     public String editarQuestaoSalvar(@PathVariable Long id,
-                                      @RequestParam Long disciplinaId,
-                                      @RequestParam String enunciado,
-                                      @RequestParam(name = "alternativaText", required = false) java.util.List<String> alternativaText,
-                                      @RequestParam(name = "alternativaCorreta", required = false) String alternativaCorreta,
-                                      HttpSession session,
-                                      RedirectAttributes redirectAttributes) {
+            @RequestParam Long disciplinaId,
+            @RequestParam String enunciado,
+            @RequestParam(name = "alternativaText", required = false) java.util.List<String> alternativaText,
+            @RequestParam(name = "alternativaCorreta", required = false) String alternativaCorreta,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return "redirect:/login";
@@ -247,10 +247,11 @@ public class QuestaoController {
 
         opcaoQuestaoService.apagarPorQuestaoId(id);
         if (alternativaText != null) {
-            String[] letras = {"a", "b", "c", "d", "e"};
+            String[] letras = { "a", "b", "c", "d", "e" };
             for (int i = 0; i < alternativaText.size() && i < letras.length; i++) {
                 String texto = alternativaText.get(i);
-                if (texto == null || texto.trim().isEmpty()) continue;
+                if (texto == null || texto.trim().isEmpty())
+                    continue;
 
                 boolean correta = false;
                 if (alternativaCorreta != null && !alternativaCorreta.isEmpty()) {
@@ -268,5 +269,29 @@ public class QuestaoController {
         }
 
         return "redirect:/banco-questoes?disciplinaId=" + disciplinaId;
+    }
+
+    /**
+     * Exclui uma questão
+     */
+    @PostMapping("/questoes/excluir/{id}")
+    public String excluirQuestao(@PathVariable Long id, RedirectAttributes redirect) {
+        com.example.model.Questao q = questaoService.buscarPorId(id);
+        if (q == null) {
+            redirect.addFlashAttribute("erro", "Questão não encontrada.");
+            return "redirect:/questoes/banco";
+        }
+
+        Long disciplinaId = q.getDisciplina().getId();
+
+        // Apaga alternativas
+        opcaoQuestaoService.apagarPorQuestaoId(id);
+
+        // Apaga a questão
+        questaoService.excluirPorId(id);
+
+        redirect.addFlashAttribute("mensagem", "Questão excluída com sucesso!");
+
+        return "redirect:/questoes/banco?disciplinaId=" + disciplinaId;
     }
 }

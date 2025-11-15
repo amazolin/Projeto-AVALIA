@@ -79,4 +79,11 @@ public class QuestaoService {
     public long contarPorDisciplina(Long disciplinaId) {
         return questaoRepository.countByDisciplinaId(disciplinaId);
     }
+
+    /**
+     * Exclui uma questão por ID
+     */
+    public void excluirPorId(Long id) {
+        questaoRepository.deleteById(id);
+    }
 }
