@@ -34,6 +34,17 @@ public class Questao {
     @OneToMany(mappedBy = "questao", fetch = FetchType.EAGER)
     @OrderBy("letra ASC")
     private List<OpcaoQuestao> opcoes;
+
+    @Column(name = "imagem")
+    private String imagem;
+
+    public String getImagem() {
+        return imagem;
+    }
+    
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
    
     public Questao() {
     }

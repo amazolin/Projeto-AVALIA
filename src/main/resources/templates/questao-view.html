@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +12,9 @@
         .questao-card {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+
         .opcao-item {
             padding: 15px;
             margin-bottom: 10px;
@@ -20,17 +22,21 @@
             border: 2px solid #e0e0e0;
             transition: all 0.3s;
         }
+
         .opcao-item:hover {
             border-color: #6a11cb;
             background-color: #f8f7fc;
         }
+
         .opcao-correta {
             background-color: #d4edda;
             border-color: #28a745;
         }
+
         .opcao-correta:hover {
             background-color: #c3e6cb;
         }
+
         .badge-letra {
             width: 40px;
             height: 40px;
@@ -41,6 +47,7 @@
             font-weight: bold;
             font-size: 1.1rem;
         }
+
         .disciplina-badge {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
@@ -51,108 +58,118 @@
         }
     </style>
 </head>
+
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" th:href="@{/coordenador}"><i class="bi bi-book-half"></i> Avalia</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" th:href="@{/coordenador}"><i class="bi bi-book-half"></i> Avalia</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-    </div>
-</nav>
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-<main class="container py-5">
-    <div class="questao-card p-4 p-md-5">
-        <!-- Cabeçalho com ações -->
-        <div class="d-flex justify-content-between align-items-start mb-4">
-            <div>
-                <h1 class="h3 mb-3">Visualizar Questão</h1>
-                <span class="disciplina-badge" th:if="${questao.disciplina != null}">
-                    <i class="bi bi-book me-2"></i>
-                    <span th:text="${questao.disciplina.nome}">Disciplina</span>
-                </span>
-            </div>
-            <div class="btn-group">
-                <a th:href="${urlVoltar != null ? urlVoltar : '/banco-questoes'}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i> Voltar
-                </a>
-                <!-- Botão Editar: apenas criador ou coordenador -->
+        </div>
+    </nav>
+
+    <main class="container py-5">
+        <div class="questao-card p-4 p-md-5">
+            <!-- Cabeçalho com ações -->
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h1 class="h3 mb-3">Visualizar Questão</h1>
+                    <span class="disciplina-badge" th:if="${questao.disciplina != null}">
+                        <i class="bi bi-book me-2"></i>
+                        <span th:text="${questao.disciplina.nome}">Disciplina</span>
+                    </span>
+                </div>
+                <div class="btn-group">
+                    <a th:href="${urlVoltar != null ? urlVoltar : '/banco-questoes'}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Voltar
+                    </a>
+                    <!-- Botão Editar: apenas criador ou coordenador -->
                     <a th:if="${usuarioLogado != null and (usuarioLogado.tipoUsuario != null and (usuarioLogado.tipoUsuario.id == 1 or (questao.criador != null and questao.criador.id == usuarioLogado.id)))}"
-                   th:href="@{/questoes/editar/{id}(id=${questao.id})}" class="btn btn-primary">
-                    <i class="bi bi-pencil"></i> Editar
-                </a>
-                <!-- Botão Excluir: apenas coordenador -->
-                <form th:if="${usuarioLogado != null and usuarioLogado.tipoUsuario != null and usuarioLogado.tipoUsuario.id == 1}"
-                      th:action="@{/questoes/excluir/{id}(id=${questao.id})}" method="post" style="display:inline;">
-                    <button class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta questão?')">
-                        <i class="bi bi-trash"></i> Excluir
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <hr class="my-4">
-
-        <!-- Enunciado -->
-        <div class="mb-5">
-            <h2 class="h5 text-muted mb-3">
-                <i class="bi bi-question-circle me-2"></i>Enunciado
-            </h2>
-            <div class="p-4 bg-light rounded">
-                <p class="fs-5 mb-0" th:text="${questao.enunciado}">Texto da questão aqui...</p>
-            </div>
-        </div>
-
-        <!-- Alternativas -->
-        <div>
-            <h2 class="h5 text-muted mb-3">
-                <i class="bi bi-list-ol me-2"></i>Alternativas
-            </h2>
-            
-            <div th:if="${opcoes == null or #lists.isEmpty(opcoes)}" class="alert alert-warning">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                Nenhuma alternativa cadastrada para essa questão.
+                        th:href="@{/questoes/editar/{id}(id=${questao.id})}" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                    <!-- Botão Excluir: apenas coordenador -->
+                    <form
+                        th:if="${usuarioLogado != null and usuarioLogado.tipoUsuario != null and usuarioLogado.tipoUsuario.id == 1}"
+                        th:action="@{/questoes/excluir/{id}(id=${questao.id})}" method="post" style="display:inline;">
+                        <button class="btn btn-danger"
+                            onclick="return confirm('Tem certeza que deseja excluir esta questão?')">
+                            <i class="bi bi-trash"></i> Excluir
+                        </button>
+                    </form>
+                </div>
             </div>
 
-            <div th:each="op, iterStat : ${opcoes}" 
-                 th:class="${op.correta} ? 'opcao-item opcao-correta' : 'opcao-item'">
-                <div class="d-flex align-items-center">
-                    <span th:class="${op.correta} ? 'badge-letra bg-success me-3' : 'badge-letra bg-secondary me-3'"
-                          th:text="${'ABCDE'.substring(iterStat.index, iterStat.index + 1)}">A</span>
-                    <div class="flex-grow-1">
-                        <span class="fs-6" th:text="${op.texto}">Texto da alternativa</span>
-                    </div>
-                    <div th:if="${op.correta}">
-                        <span class="badge bg-success">
-                            <i class="bi bi-check-circle-fill me-1"></i>Correta
-                        </span>
+            <hr class="my-4">
+
+            <!-- Enunciado -->
+            <div class="mb-5">
+                <h2 class="h5 text-muted mb-3">
+                    <i class="bi bi-question-circle me-2"></i>Enunciado
+                </h2>
+                <div class="p-4 bg-light rounded">
+                    <p class="fs-5 mb-0" th:text="${questao.enunciado}">Texto da questão aqui...</p>
+                </div>
+            </div>
+
+            <div th:if="${questao.imagem != null}" style="max-width: 400px; width: 100%; height: auto; border-radius: 8px;">
+                <img th:src="@{'/uploads/questoes/' + ${questao.imagem}}" class="img-fluid mt-2">
+            </div>
+
+
+            <!-- Alternativas -->
+            <div>
+                <h2 class="h5 text-muted mb-3">
+                    <i class="bi bi-list-ol me-2"></i>Alternativas
+                </h2>
+
+                <div th:if="${opcoes == null or #lists.isEmpty(opcoes)}" class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Nenhuma alternativa cadastrada para essa questão.
+                </div>
+
+                <div th:each="op, iterStat : ${opcoes}"
+                    th:class="${op.correta} ? 'opcao-item opcao-correta' : 'opcao-item'">
+                    <div class="d-flex align-items-center">
+                        <span th:class="${op.correta} ? 'badge-letra bg-success me-3' : 'badge-letra bg-secondary me-3'"
+                            th:text="${'ABCDE'.substring(iterStat.index, iterStat.index + 1)}">A</span>
+                        <div class="flex-grow-1">
+                            <span class="fs-6" th:text="${op.texto}">Texto da alternativa</span>
+                        </div>
+                        <div th:if="${op.correta}">
+                            <span class="badge bg-success">
+                                <i class="bi bi-check-circle-fill me-1"></i>Correta
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Informações adicionais -->
-        <hr class="my-4">
-        <div class="row text-muted small">
-            <div class="col-md-4">
-                <i class="bi bi-hash me-1"></i>
-                <strong>ID da Questão:</strong> <span th:text="${questao.id}">1</span>
-            </div>
-            <div class="col-md-4">
-                <i class="bi bi-collection me-1"></i>
-                <strong>Total de Alternativas:</strong> <span th:text="${#lists.size(opcoes)}">5</span>
-            </div>
-            <div class="col-md-4">
-                <i class="bi bi-person-circle me-1"></i>
-                <strong>Criado por:</strong> <span th:text="${questao.criador != null ? questao.criador.nome : 'Desconhecido'}">Criador</span>
+            <!-- Informações adicionais -->
+            <hr class="my-4">
+            <div class="row text-muted small">
+                <div class="col-md-4">
+                    <i class="bi bi-hash me-1"></i>
+                    <strong>ID da Questão:</strong> <span th:text="${questao.id}">1</span>
+                </div>
+                <div class="col-md-4">
+                    <i class="bi bi-collection me-1"></i>
+                    <strong>Total de Alternativas:</strong> <span th:text="${#lists.size(opcoes)}">5</span>
+                </div>
+                <div class="col-md-4">
+                    <i class="bi bi-person-circle me-1"></i>
+                    <strong>Criado por:</strong> <span
+                        th:text="${questao.criador != null ? questao.criador.nome : 'Desconhecido'}">Criador</span>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
