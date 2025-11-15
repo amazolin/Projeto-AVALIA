@@ -86,8 +86,13 @@ public class ControladorAvalia {
 	}
 	
 	@GetMapping("/gerar-provas")
-	public String redirecionarGerarProvas() {
-	    return "redirect:/provas/gerar";
+	public String redirecionarGerarProvas(Model model, HttpSession session) {
+		Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+		 if (usuarioLogado == null || usuarioLogado.getTipoUsuario() == null) {
+	        return "redirect:/login";	
+	    } else {
+			return "redirect:/provas/gerar";
+		}			
 	}
 
 	/**
@@ -100,14 +105,14 @@ public class ControladorAvalia {
 	    
 	    // Verifica se usuário está logado
 	    Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
-	    if (usuarioLogado == null) {
+	    if (usuarioLogado == null || usuarioLogado.getTipoUsuario() == null) {
 	        return "redirect:/login";
 	    }
 	    
 	    List<Disciplina> disciplinas;
 	    
 	    // 🔒 FILTRA DISCIPLINAS: coordenador vê todas, professor vê apenas as suas
-	    if (usuarioLogado.getTipoUsuario() != null && usuarioLogado.getTipoUsuario().getId() == 1) {
+	    if (usuarioLogado.getTipoUsuario().getId() == 1) {
 	        // Coordenador: todas as disciplinas
 	        disciplinas = disciplinaService.buscarTodas();
 	    } else {
@@ -380,4 +385,12 @@ public class ControladorAvalia {
 		usuarioService.apagarUsuario(usuario);
 		return ResponseEntity.ok("E-mail apagado com sucesso!");
 	}
+
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+    session.invalidate();  // Encerra a sessão do usuário
+    return "redirect:/login";
+	}
+
+	
 }
