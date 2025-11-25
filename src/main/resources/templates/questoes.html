@@ -127,6 +127,8 @@
 
     <!-- Edit form (prefilled) -->
     <form th:if="${questao != null}" th:action="@{/questoes/editar/{id}(id=${questao.id})}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="origem" th:value="${origem}">
+            <input type="hidden" name="origemDisciplinaId" th:value="${origemDisciplinaId}">
             <!-- MATÉRIA -->
             <div class="mb-4">
                 <label for="materiaEdit" class="form-label fs-5">Matéria</label>
@@ -164,7 +166,7 @@
             </div>
 
             <div class="d-flex justify-content-end mt-4">
-                <a th:href="@{/banco-questoes}" class="btn btn-outline-secondary btn-lg px-4 me-2">
+                <a th:href="${urlVoltar != null ? urlVoltar : '/banco-questoes'}" class="btn btn-outline-secondary btn-lg px-4 me-2">
                     <i class="bi bi-x-circle me-2"></i>Cancelar
                 </a>
                 <button type="submit" class="btn btn-primary-custom btn-lg px-5">

@@ -171,6 +171,8 @@ public class QuestaoController {
         model.addAttribute("opcoes", opcaoQuestaoService.buscarPorQuestaoId(id));
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("urlVoltar", urlVoltar);
+        model.addAttribute("origem", origem);
+        model.addAttribute("disciplinaId", disciplinaId);
 
         return "questao-view";
     }
@@ -179,7 +181,10 @@ public class QuestaoController {
      * Exibe o formulário de edição de questão
      */
     @GetMapping("/questoes/editar/{id}")
-    public String editarQuestaoForm(@PathVariable Long id, Model model,
+    public String editarQuestaoForm(@PathVariable Long id,
+            @RequestParam(value = "origem", required = false) String origem,
+            @RequestParam(value = "disciplinaId", required = false) Long disciplinaId,
+            Model model,
             HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
@@ -201,10 +206,24 @@ public class QuestaoController {
             return "redirect:/banco-questoes?disciplinaId=" + q.getDisciplina().getId();
         }
 
+        // Determina a URL de retorno
+        String urlVoltar = "/banco-questoes";
+        if ("gerar-provas".equals(origem)) {
+            urlVoltar = "/gerar-provas";
+            if (disciplinaId != null) {
+                urlVoltar += "?disciplinaId=" + disciplinaId;
+            }
+        } else if (q.getDisciplina() != null) {
+            urlVoltar += "?disciplinaId=" + q.getDisciplina().getId();
+        }
+
         model.addAttribute("questao", q);
         model.addAttribute("listaDisciplinas", disciplinaService.findAllByUsuario(usuarioLogado));
         model.addAttribute("opcoes", opcaoQuestaoService.buscarPorQuestaoId(id));
         model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("urlVoltar", urlVoltar);
+        model.addAttribute("origem", origem);
+        model.addAttribute("origemDisciplinaId", disciplinaId);
 
         return "questoes";
     }
@@ -218,6 +237,8 @@ public class QuestaoController {
             @RequestParam String enunciado,
             @RequestParam(name = "alternativaText", required = false) java.util.List<String> alternativaText,
             @RequestParam(name = "alternativaCorreta", required = false) String alternativaCorreta,
+            @RequestParam(value = "origem", required = false) String origem,
+            @RequestParam(value = "origemDisciplinaId", required = false) Long origemDisciplinaId,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
@@ -268,6 +289,14 @@ public class QuestaoController {
             }
         }
 
+        // Redireciona para a origem correta
+        if ("gerar-provas".equals(origem)) {
+            String redirect = "redirect:/gerar-provas";
+            if (origemDisciplinaId != null) {
+                redirect += "?disciplinaId=" + origemDisciplinaId;
+            }
+            return redirect;
+        }
         return "redirect:/banco-questoes?disciplinaId=" + disciplinaId;
     }
 
@@ -275,7 +304,10 @@ public class QuestaoController {
      * Exclui uma questão
      */
     @PostMapping("/questoes/excluir/{id}")
-    public String excluirQuestao(@PathVariable Long id, RedirectAttributes redirect) {
+    public String excluirQuestao(@PathVariable Long id,
+            @RequestParam(value = "origem", required = false) String origem,
+            @RequestParam(value = "disciplinaId", required = false) Long origemDisciplinaId,
+            RedirectAttributes redirect) {
         com.example.model.Questao q = questaoService.buscarPorId(id);
         if (q == null) {
             redirect.addFlashAttribute("erro", "Questão não encontrada.");
@@ -292,6 +324,14 @@ public class QuestaoController {
 
         redirect.addFlashAttribute("mensagem", "Questão excluída com sucesso!");
 
+        // Redireciona para a origem correta
+        if ("gerar-provas".equals(origem)) {
+            String redirectUrl = "redirect:/gerar-provas";
+            if (origemDisciplinaId != null) {
+                redirectUrl += "?disciplinaId=" + origemDisciplinaId;
+            }
+            return redirectUrl;
+        }
         return "redirect:/questoes/banco?disciplinaId=" + disciplinaId;
     }
 }
